@@ -1,0 +1,339 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import schemaQr from '../../assets/schema_qr.png';
+---
+
+<Layout title="QR voting survey — Jesús Caballero Rodríguez">
+  <main class="project-page">
+    <nav class="back"><a href="/">← Volver</a></nav>
+
+    <header class="project-hero">
+      <h1 class="gradient-text">QR voting survey</h1>
+      <p class="tagline">Votación anónima y segura con códigos QR</p>
+    </header>
+
+    <section class="section" id="context">
+      <h2>🎭 Context</h2>
+      <p>
+        Imagine going to a 🎭 show, 🎬 movie, or 🎶 concert and wanting to share your thoughts to make it even better.
+        With this QR-based app 📲, you can give your feedback instantly and anonymously — just scan a QR code with your phone and share your opinion!
+      </p>
+      <div class="callout">
+        👉 <strong>Ejemplo:</strong> en un concurso donde actúan varios grupos, el público puede votar por su favorito.
+        Cada persona recibe un QR único, lo escanea y envía su voto. Súper simple: <strong>1 QR = 1 voto</strong> ✅
+        Sin login, sin datos personales.
+      </div>
+      <p>
+        Y no se queda ahí 🚀: el sistema también puede recoger feedback más detallado, como puntuar a cada grupo
+        en estilo, originalidad, energía y más.
+      </p>
+    </section>
+
+    <section class="section" id="demo">
+      <h2>Demo</h2>
+      <div class="video-embed">
+        <iframe
+          src="https://www.youtube.com/embed/QXVFPCbwpvA"
+          title="Demo QR voting survey"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+
+    <section class="section" id="explanation">
+      <h2>Explanation</h2>
+
+      <h3>🌟 High-Level Flow (Non-Technical)</h3>
+      <ol class="flow">
+        <li><span class="step">👤 Anonymous access</span> — Cada participante recibe un QR único que lo representa de forma anónima; no se almacena información personal.</li>
+        <li><span class="step">📲 Scan &amp; access</span> — Escanear el QR abre un enlace de voto seguro que verifica al participante y concede acceso.</li>
+        <li><span class="step">📝 Cast a vote</span> — El usuario elige su(s) opción(es) y envía.</li>
+        <li><span class="step">✅ Secure validation</span> — Cada voto se comprueba, almacena de forma anónima y se vincula a su QR único.</li>
+        <li><span class="step">🚫 One vote per person</span> — Un QR solo puede usarse una vez; cualquier intento duplicado se bloquea automáticamente.</li>
+        <li><span class="step">📊 Results for admins</span> — Solo los administradores pueden iniciar sesión para ver resultados agregados en tiempo real.</li>
+      </ol>
+
+      <details class="details-card" id="tech-details">
+        <summary>
+          🔧 Technical Details (For Developers)
+          <span class="chevron" aria-hidden="true">▾</span>
+        </summary>
+        <div class="details-body">
+          <h4>🔄 Application Flow</h4>
+      <p>En el servicio <code>qr_application</code>, los códigos QR se vinculan a usuarios anónimos (<code>user_1</code>, <code>password</code>, por ejemplo), con contraseñas cifradas almacenadas en la base de datos.</p>
+      <p>Dos endpoints de setup generan los QR antes de que los participantes puedan votar:</p>
+      <ol class="flow">
+        <li>Con <code>/token/generate</code> enviamos username y password para validarlos contra la base de datos y generar un token firmado con el secreto de <code>qr_application</code>.</li>
+        <li>Con <code>/qr</code> creamos el código QR, autenticando con el token del paso 2.a (User Auth).</li>
+      </ol>
+      <p>El JWT generado se incrusta en la URL del QR, que los participantes escanean después.</p>
+      <p>Escanear un QR abre <code>/vote:&lt;token&gt;</code> desde el dashboard. El token es un JWT firmado con un secreto compartido entre los microservicios Django — el mismo token generado en el paso 2.</p>
+      <p>En la página <code>vote</code>, el usuario selecciona una opción y envía.</p>
+      <p>El envío llama a <code>/token/validate/?option=&lt;option&gt;</code> en el servicio <code>qr_application</code> (User Auth).</p>
+      <p>Si es válido, el voto se guarda y <code>token_used</code> pasa a <code>True</code>. En caso contrario, la página devuelve un error controlado y no se guarda ningún voto.</p>
+      <p>Cualquier intento de reutilizar un token se bloquea (<code>token_used = True</code>) mostrando una página de error controlada.</p>
+      <p>Los administradores acceden a <code>qr_dashboard</code> con Admin Auth para ver las gráficas de votación agregadas (vía el endpoint <code>/metrics</code> de <code>qr_application</code>). El flujo típico es <code>/login</code> → <code>/dashboard</code> → <code>/metrics</code>.</p>
+      <p>Los tokens se guardan en la sesión de <code>qr_dashboard</code> para mantener la autenticación del admin entre peticiones, y se limpian al hacer logout.</p>
+
+      <figure class="schema-figure">
+        <Image src={schemaQr} alt="Esquema del flujo de autenticación y votación QR" />
+        <figcaption>Esquema del flujo de votación QR entre servicios.</figcaption>
+      </figure>
+
+      <h4>🔐 Authentication Types</h4>
+      <div class="auth-grid">
+        <div class="auth-card">
+          <h5>🔑 JWT Auth</h5>
+          <p>✅ Válido si el token no está expirado y está firmado con el secreto compartido.</p>
+          <p class="purpose">📌 Verificación general de tokens entre servicios.</p>
+        </div>
+        <div class="auth-card">
+          <h5>🛡️ Admin Auth</h5>
+          <p>✅ Token válido, usuario existe en BD y es admin.</p>
+          <p class="purpose">📌 Acceso de administradores al dashboard y a las métricas.</p>
+        </div>
+        <div class="auth-card">
+          <h5>🙋 User Auth</h5>
+          <p>✅ Token válido, usuario existe en BD y no es admin.</p>
+          <p class="purpose">📌 Acciones de participante (generar QR, enviar voto).</p>
+        </div>
+        <div class="auth-card">
+          <h5>🤝 Server-to-Server Auth</h5>
+          <p>✅ Token válido y firmado con el secreto compartido.</p>
+          <p class="purpose">📌 Comunicación interna segura entre microservicios Django.</p>
+        </div>
+      </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="technologies">
+      <h2>Technologies</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h4>🐍 Python Backend</h4>
+          <p>Microservicios Django.</p>
+        </div>
+        <div class="tech-card">
+          <h4>📊 QR Dashboard</h4>
+          <p>UI de la encuesta de votación y resultados agregados.</p>
+        </div>
+        <div class="tech-card">
+          <h4>🔲 QR Application</h4>
+          <p>Autenticación, gestión de usuarios anónimos e interacción con la base de datos.</p>
+        </div>
+        <div class="tech-card">
+          <h4>📀 Database</h4>
+          <p>PostgreSQL — usuarios anónimos, resultados de votación y definiciones de roles.</p>
+        </div>
+        <div class="tech-card">
+          <h4>🔵 Render</h4>
+          <p>Hosting y despliegue de los microservicios, PostgreSQL gestionado, variables de entorno y secretos.</p>
+        </div>
+        <div class="tech-card">
+          <h4>👾 GitHub</h4>
+          <p>Control de versiones, colaboración y seguimiento del proyecto.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .back {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+  .project-hero {
+    margin-bottom: 2rem;
+  }
+  .project-hero h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .section {
+    margin-bottom: 2.5rem;
+  }
+  .section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  .section h3 {
+    font-size: 1.15rem;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--fg);
+  }
+  .section h4 {
+    font-size: 1.05rem;
+    margin: 1.25rem 0 0.5rem;
+    color: var(--fg);
+  }
+  .section p {
+    color: var(--fg);
+    margin-bottom: 0.75rem;
+  }
+
+  .callout {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    background: #14171d;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .placeholder {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .details-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: linear-gradient(145deg, #171b23, #12151b);
+    margin: 1.5rem 0;
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .details-card[open] {
+    border-color: rgba(79, 140, 255, 0.5);
+    box-shadow: 0 8px 24px rgba(79, 140, 255, 0.12);
+  }
+
+  .details-card summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    padding: 1rem 1.25rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.2s ease;
+  }
+
+  .details-card summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .details-card summary:hover {
+    color: var(--accent);
+  }
+
+  .details-card .chevron {
+    transition: transform 0.25s ease;
+    color: var(--muted);
+  }
+
+  .details-card[open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .details-body {
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  .schema-figure {
+    margin: 1.25rem 0;
+  }
+  .schema-figure img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+  .schema-figure figcaption {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .video-embed {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+  .video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .flow {
+    margin: 0.5rem 0 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .flow .step {
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  code {
+    background: #1a1f28;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.875em;
+  }
+
+  .auth-grid,
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .auth-card,
+  .tech-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    background: linear-gradient(145deg, #171b23, #12151b);
+    transition: border-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  }
+
+  .auth-card:hover,
+  .tech-card:hover {
+    border-color: rgba(79, 140, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(79, 140, 255, 0.12);
+  }
+
+  .auth-card h5 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .auth-card .purpose {
+    color: var(--muted);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .tech-card h4 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+  }
+  .tech-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>
