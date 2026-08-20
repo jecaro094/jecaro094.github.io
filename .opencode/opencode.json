@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "portfolio-manager",
+  "instructions": ["AGENTS.md"],
+  "agent": {
+    "portfolio-manager": {
+      "description": "Agente primario del portfolio. Gestiona el repo <username>.github.io: añade proyectos, mantiene el CV, valida contenido y publica.",
+      "mode": "primary"
+    }
+  },
+  "command": {
+    "add-project": {
+      "description": "Añade o actualiza un proyecto del portfolio (usa proyectos/ como fuente).",
+      "template": "Añade o actualiza un proyecto del portfolio siguiendo las instrucciones de AGENTS.md. Usa proyectos/ como fuente y valida los cambios antes de finalizar."
+    },
+    "publish": {
+      "description": "Build + validación + guía de despliegue a GitHub Pages.",
+      "template": "Prepara el portfolio para publicación. Ejecuta el build y las validaciones correspondientes, revisa cualquier error y explica los pasos necesarios para desplegarlo a GitHub Pages."
+    },
+    "refresh-cv": {
+      "description": "Sincroniza el CV desde cv/ y regenera páginas derivadas.",
+      "template": "Sincroniza el CV desde cv/ y regenera las páginas derivadas siguiendo las instrucciones de AGENTS.md. Valida que los cambios sean coherentes antes de finalizar."
+    }
+  }
+}
