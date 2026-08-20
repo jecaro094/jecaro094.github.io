@@ -1,4 +1,6 @@
 ---
+import '../styles/global.css';
+
 export interface Props {
   title: string;
 }
@@ -15,7 +17,6 @@ const currentYear = new Date().getFullYear();
     <meta name="description" content="Portfolio de Jesús Caballero Rodríguez — Backend Engineer" />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="/styles/global.css" />
   </head>
   <body>
     <header class="site-header">

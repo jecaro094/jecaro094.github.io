@@ -1,13 +1,103 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const projects = [
+  { name: 'QR voting survey', href: '/projects/qr-voting-survey/' },
+  { name: 'Poke API' },
+];
 ---
 
 <Layout title="Jesús Caballero Rodríguez — Portfolio">
-  <main class="hero">
-    <h1>Jesús Caballero Rodríguez</h1>
-    <p class="tagline">Backend Engineer · Python · Data Engineering</p>
-    <p class="subtitle">
-      Ingeniero backend con experiencia en sistemas distribuidos, APIs y data engineering.
-    </p>
+  <main>
+    <section class="hero">
+      <h1 class="gradient-text animate" style="animation-delay: 0.05s">Jesús Caballero Rodríguez</h1>
+      <p class="tagline animate" style="animation-delay: 0.15s">Backend Engineer · Python · Data Engineering</p>
+      <p class="subtitle animate" style="animation-delay: 0.25s">
+        Ingeniero backend con experiencia en sistemas distribuidos, APIs y data engineering.
+      </p>
+    </section>
+    <section class="projects-section animate" style="animation-delay: 0.35s">
+      <h2>Proyectos personales</h2>
+      <div class="project-grid">
+        {
+          projects.map(({ name, href }) => (
+            <a class="project-card" role="button" tabindex="0" href={href}>
+              <span class="card-arrow">→</span>
+              <h3>{name}</h3>
+            </a>
+          ))
+        }
+      </div>
+    </section>
   </main>
 </Layout>
+
+<script>
+  document.querySelectorAll('.project-card').forEach((card) => {
+    const setTilt = (e) => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-3px)`;
+    };
+    const resetTilt = () => {
+      card.style.transform = '';
+    };
+    card.addEventListener('pointermove', setTilt);
+    card.addEventListener('pointerleave', resetTilt);
+    card.addEventListener('blur', resetTilt);
+  });
+</script>
+
+<style>
+  section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    background: linear-gradient(145deg, #171b23, #12151b);
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+    will-change: transform;
+    outline: none;
+  }
+
+  .project-card:hover,
+  .project-card:focus-visible {
+    border-color: rgba(79, 140, 255, 0.6);
+    box-shadow:
+      0 10px 34px rgba(79, 140, 255, 0.16),
+      inset 0 0 0 1px rgba(79, 140, 255, 0.12);
+  }
+
+  .project-card h3 {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .card-arrow {
+    display: inline-block;
+    color: var(--accent);
+    font-size: 1.1rem;
+    opacity: 0.4;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .project-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+</style>

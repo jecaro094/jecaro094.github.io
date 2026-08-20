@@ -5,7 +5,10 @@
   "agent": {
     "portfolio-manager": {
       "description": "Agente primario del portfolio. Gestiona el repo <username>.github.io: añade proyectos, mantiene el CV, valida contenido y publica.",
-      "mode": "primary"
+      "mode": "primary",
+      "permission": {
+        "question": "allow"
+      }
     }
   },
   "command": {

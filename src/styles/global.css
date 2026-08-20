@@ -20,6 +20,67 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  width: 42vw;
+  height: 42vw;
+  background: rgba(79, 140, 255, 0.16);
+  top: -12vw;
+  left: -12vw;
+  animation: drift-a 20s ease-in-out infinite;
+}
+
+body::after {
+  width: 36vw;
+  height: 36vw;
+  background: rgba(140, 90, 255, 0.13);
+  bottom: -12vw;
+  right: -10vw;
+  animation: drift-b 26s ease-in-out infinite;
+}
+
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(12vw, 8vw) scale(1.15); }
+}
+
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-10vw, -10vw) scale(1.1); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate {
+  animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--fg) 20%, var(--accent) 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, body::after { animation: none; }
+  .animate { animation: none; }
+  .project-card { transition: none; }
 }
 
 a {
