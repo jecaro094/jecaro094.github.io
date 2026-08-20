@@ -1,0 +1,199 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import pokeCover from '../../assets/PokeAPI.webp';
+---
+
+<Layout title="PokeAPI — Jesús Caballero Rodríguez">
+  <main class="project-page">
+    <nav class="back animate" style="animation-delay: 0.05s"><a href="/">← Back</a></nav>
+
+    <header class="project-hero animate" style="animation-delay: 0.1s">
+      <Image src={pokeCover} alt="" class="hero-bg" loading="lazy" />
+      <span class="hero-overlay" aria-hidden="true"></span>
+      <h1 class="gradient-text">PokeAPI</h1>
+      <p class="tagline">Pokédex with React, FastAPI, and AWS deployment</p>
+    </header>
+
+    <section class="section animate" id="context" style="animation-delay: 0.2s">
+      <h2>Context</h2>
+      <p>
+        This project is an API that pulls data from the public Pokémon REST API 🐉 (<a href="https://pokeapi.co" target="_blank" rel="noopener noreferrer">https://pokeapi.co</a>) to show different stats for your favorite Pokémon.
+      </p>
+      <p>
+        With this custom Pokédex 📖, you can filter Pokémon by name 🔍 and check their stats with just one click on the chosen Pokémon.
+      </p>
+      <p>
+        It's a simple but stylish way ✨ to see how different technologies can come together to build a fun Pokédex. The same approach can also be applied to real-world cases: building companion apps 🎮, creating interactive dashboards 📊, or teaching beginners how to work with APIs in an engaging way 🚀.
+      </p>
+      <p>
+        For now, we've kept it simple by using only the PokeAPI REST API ⚡, but the system can easily grow by adding more data and features in the future! 🚀
+      </p>
+    </section>
+
+    <section class="section animate" id="demo" style="animation-delay: 0.3s">
+      <h2>Demo</h2>
+      <div class="video-embed">
+        <iframe
+          src="https://www.youtube.com/embed/NaE7lj-nMyk"
+          title="Demo PokeAPI"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+
+    <section class="section animate" id="technologies" style="animation-delay: 0.4s">
+      <h2>Technologies</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h4>🔵 React frontend</h4>
+          <ul>
+            <li>Graphs for displaying stats 📊</li>
+            <li>Tables with pagination (connected to the database)</li>
+          </ul>
+        </div>
+        <div class="tech-card">
+          <h4>🐍 Python backend</h4>
+          <ul>
+            <li>Framework FastAPI ⚡</li>
+            <li>Authentication 🔐</li>
+            <li>Unit of Work (UoW) pattern for database operations 🗄️</li>
+            <li>DTOs &amp; database models</li>
+          </ul>
+        </div>
+        <div class="tech-card">
+          <h4>🐳 Docker</h4>
+          <ul>
+            <li>Database container</li>
+            <li>Nginx container</li>
+            <li>Frontend container</li>
+            <li>Backend container</li>
+          </ul>
+        </div>
+        <div class="tech-card">
+          <h4>🟡 AWS</h4>
+          <ul>
+            <li>Elastic Beanstalk for deployment ☁️</li>
+          </ul>
+        </div>
+        <div class="tech-card">
+          <h4>👾 GitHub</h4>
+          <ul>
+            <li>GitHub Secrets 🔑</li>
+            <li>GitHub Workflows for automated AWS deployment ⚙️</li>
+            <li>Version control</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .back {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+  .project-hero {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 3rem 2rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 2rem;
+  }
+  .project-hero h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 17, 21, 0.55), rgba(15, 17, 21, 0.95));
+  }
+  .project-hero h1,
+  .project-hero .tagline {
+    position: relative;
+    z-index: 2;
+  }
+
+  .section {
+    margin-bottom: 2.5rem;
+  }
+  .section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  .section p {
+    color: var(--fg);
+    margin-bottom: 0.75rem;
+  }
+
+  .placeholder {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .video-embed {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+  .video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .tech-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    background: linear-gradient(145deg, #171b23, #12151b);
+    transition: border-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  }
+
+  .tech-card:hover {
+    border-color: rgba(79, 140, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(79, 140, 255, 0.12);
+  }
+
+  .tech-card h4 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+  }
+  .tech-card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>

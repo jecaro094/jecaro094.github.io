@@ -2,35 +2,38 @@
 import Layout from '../../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import schemaQr from '../../assets/schema_qr.png';
+import qrCover from '../../assets/QR voting survey.png';
 ---
 
 <Layout title="QR voting survey — Jesús Caballero Rodríguez">
   <main class="project-page">
-    <nav class="back"><a href="/">← Volver</a></nav>
+    <nav class="back animate" style="animation-delay: 0.05s"><a href="/">← Back</a></nav>
 
-    <header class="project-hero">
+    <header class="project-hero animate" style="animation-delay: 0.1s">
+      <Image src={qrCover} alt="" class="hero-bg" loading="lazy" />
+      <span class="hero-overlay" aria-hidden="true"></span>
       <h1 class="gradient-text">QR voting survey</h1>
-      <p class="tagline">Votación anónima y segura con códigos QR</p>
+      <p class="tagline">Anonymous and secure voting with QR codes</p>
     </header>
 
-    <section class="section" id="context">
+    <section class="section animate" id="context" style="animation-delay: 0.2s">
       <h2>🎭 Context</h2>
       <p>
         Imagine going to a 🎭 show, 🎬 movie, or 🎶 concert and wanting to share your thoughts to make it even better.
         With this QR-based app 📲, you can give your feedback instantly and anonymously — just scan a QR code with your phone and share your opinion!
       </p>
       <div class="callout">
-        👉 <strong>Ejemplo:</strong> en un concurso donde actúan varios grupos, el público puede votar por su favorito.
-        Cada persona recibe un QR único, lo escanea y envía su voto. Súper simple: <strong>1 QR = 1 voto</strong> ✅
-        Sin login, sin datos personales.
+        👉 <strong>Example:</strong> at a contest where several groups are performing, the audience can vote for their favorite.
+        Each person gets a unique QR code, scans it, and sends in their vote. Super simple: <strong>1 QR = 1 vote</strong> ✅
+        No login, no personal info needed.
       </div>
       <p>
-        Y no se queda ahí 🚀: el sistema también puede recoger feedback más detallado, como puntuar a cada grupo
-        en estilo, originalidad, energía y más.
+        And it doesn't stop there 🚀: the system can also collect more detailed feedback, like rating each group
+        on style, originality, energy, and more.
       </p>
     </section>
 
-    <section class="section" id="demo">
+    <section class="section animate" id="demo" style="animation-delay: 0.3s">
       <h2>Demo</h2>
       <div class="video-embed">
         <iframe
@@ -43,17 +46,17 @@ import schemaQr from '../../assets/schema_qr.png';
       </div>
     </section>
 
-    <section class="section" id="explanation">
+    <section class="section animate" id="explanation" style="animation-delay: 0.4s">
       <h2>Explanation</h2>
 
       <h3>🌟 High-Level Flow (Non-Technical)</h3>
       <ol class="flow">
-        <li><span class="step">👤 Anonymous access</span> — Cada participante recibe un QR único que lo representa de forma anónima; no se almacena información personal.</li>
-        <li><span class="step">📲 Scan &amp; access</span> — Escanear el QR abre un enlace de voto seguro que verifica al participante y concede acceso.</li>
-        <li><span class="step">📝 Cast a vote</span> — El usuario elige su(s) opción(es) y envía.</li>
-        <li><span class="step">✅ Secure validation</span> — Cada voto se comprueba, almacena de forma anónima y se vincula a su QR único.</li>
-        <li><span class="step">🚫 One vote per person</span> — Un QR solo puede usarse una vez; cualquier intento duplicado se bloquea automáticamente.</li>
-        <li><span class="step">📊 Results for admins</span> — Solo los administradores pueden iniciar sesión para ver resultados agregados en tiempo real.</li>
+        <li><span class="step">👤 Anonymous access</span> — Each participant gets a unique QR code that represents them anonymously; no personal information is stored.</li>
+        <li><span class="step">📲 Scan &amp; access</span> — Scanning the QR opens a secure voting link, which verifies the participant and grants access.</li>
+        <li><span class="step">📝 Cast a vote</span> — The user selects their choice(s) and submits.</li>
+        <li><span class="step">✅ Secure validation</span> — Each vote is checked, stored anonymously, and linked to its unique QR code.</li>
+        <li><span class="step">🚫 One vote per person</span> — A QR can only be used once. Any duplicate attempt is automatically blocked.</li>
+        <li><span class="step">📊 Results for admins</span> — Only administrators can log in to view aggregated results in real time.</li>
       </ol>
 
       <details class="details-card" id="tech-details">
@@ -63,79 +66,137 @@ import schemaQr from '../../assets/schema_qr.png';
         </summary>
         <div class="details-body">
           <h4>🔄 Application Flow</h4>
-      <p>En el servicio <code>qr_application</code>, los códigos QR se vinculan a usuarios anónimos (<code>user_1</code>, <code>password</code>, por ejemplo), con contraseñas cifradas almacenadas en la base de datos.</p>
-      <p>Dos endpoints de setup generan los QR antes de que los participantes puedan votar:</p>
-      <ol class="flow">
-        <li>Con <code>/token/generate</code> enviamos username y password para validarlos contra la base de datos y generar un token firmado con el secreto de <code>qr_application</code>.</li>
-        <li>Con <code>/qr</code> creamos el código QR, autenticando con el token del paso 2.a (User Auth).</li>
+      <p>In the <code>qr_application</code> service, QR codes are linked to anonymous users (<code>user_1</code>, <code>password</code>, e.g.), with encrypted passwords stored in the database.</p>
+
+      <ol class="steps">
+        <li class="step-item">
+          <span class="step-badge" aria-hidden="true">1</span>
+          <div class="step-content">
+            <h5>Setup endpoints</h5>
+            <p>Two setup endpoints generate the QR codes before participants can vote:</p>
+            <ul class="endpoint-list">
+              <li><code>/token/generate</code> — provide username and password to validate against the database and generate a token signed with the <code>qr_application</code> secret.</li>
+              <li><code>/qr</code> — create the QR code, authenticating with the token from step 2.a (User Auth).</li>
+            </ul>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-badge" aria-hidden="true">2</span>
+          <div class="step-content">
+            <h5>Embed the token</h5>
+            <p>The generated JWT is embedded in the QR code's URL, which participants later scan.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-badge" aria-hidden="true">3</span>
+          <div class="step-content">
+            <h5>Scan &amp; access</h5>
+            <p>Scanning a QR opens <code>/vote:&lt;token&gt;</code> from the dashboard. The token is a JWT signed with a shared secret between Django microservices — the same token generated in step 2.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-badge" aria-hidden="true">4</span>
+          <div class="step-content">
+            <h5>Cast a vote</h5>
+            <p>On the <code>vote</code> page, the user selects an option and submits. Submission calls <code>/token/validate/?option=&lt;option&gt;</code> in the <code>qr_application</code> service (User Auth).</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-badge" aria-hidden="true">5</span>
+          <div class="step-content">
+            <h5>Validate &amp; enforce one use</h5>
+            <p>If valid, the vote is saved and <code>token_used</code> is set to <code>True</code>. In other case, the page returns a controlled error and no vote is saved. Any attempt to reuse a token is blocked (<code>token_used = True</code>) and a controlled error page is shown.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-badge" aria-hidden="true">6</span>
+          <div class="step-content">
+            <h5>Admin access</h5>
+            <p>Admins log into <code>qr_dashboard</code> with Admin Auth to view aggregated voting graphs (via <code>/metrics</code> endpoint in <code>qr_application</code>). Typical flow: <code>/login</code> → <code>/dashboard</code> → <code>/metrics</code>. Tokens are stored in the session for ongoing auth and cleared on logout.</p>
+          </div>
+        </li>
       </ol>
-      <p>El JWT generado se incrusta en la URL del QR, que los participantes escanean después.</p>
-      <p>Escanear un QR abre <code>/vote:&lt;token&gt;</code> desde el dashboard. El token es un JWT firmado con un secreto compartido entre los microservicios Django — el mismo token generado en el paso 2.</p>
-      <p>En la página <code>vote</code>, el usuario selecciona una opción y envía.</p>
-      <p>El envío llama a <code>/token/validate/?option=&lt;option&gt;</code> en el servicio <code>qr_application</code> (User Auth).</p>
-      <p>Si es válido, el voto se guarda y <code>token_used</code> pasa a <code>True</code>. En caso contrario, la página devuelve un error controlado y no se guarda ningún voto.</p>
-      <p>Cualquier intento de reutilizar un token se bloquea (<code>token_used = True</code>) mostrando una página de error controlada.</p>
-      <p>Los administradores acceden a <code>qr_dashboard</code> con Admin Auth para ver las gráficas de votación agregadas (vía el endpoint <code>/metrics</code> de <code>qr_application</code>). El flujo típico es <code>/login</code> → <code>/dashboard</code> → <code>/metrics</code>.</p>
-      <p>Los tokens se guardan en la sesión de <code>qr_dashboard</code> para mantener la autenticación del admin entre peticiones, y se limpian al hacer logout.</p>
 
       <figure class="schema-figure">
-        <Image src={schemaQr} alt="Esquema del flujo de autenticación y votación QR" />
-        <figcaption>Esquema del flujo de votación QR entre servicios.</figcaption>
+        <Image src={schemaQr} alt="QR voting and authentication flow diagram" />
+        <figcaption>QR voting flow between services.</figcaption>
       </figure>
 
       <h4>🔐 Authentication Types</h4>
       <div class="auth-grid">
         <div class="auth-card">
           <h5>🔑 JWT Auth</h5>
-          <p>✅ Válido si el token no está expirado y está firmado con el secreto compartido.</p>
-          <p class="purpose">📌 Verificación general de tokens entre servicios.</p>
+          <p>✅ Valid if token not expired and signed with shared secret.</p>
+          <p class="purpose">📌 Purpose: General token verification between services.</p>
         </div>
         <div class="auth-card">
           <h5>🛡️ Admin Auth</h5>
-          <p>✅ Token válido, usuario existe en BD y es admin.</p>
-          <p class="purpose">📌 Acceso de administradores al dashboard y a las métricas.</p>
+          <p>✅ Token valid, user exists in DB, and is admin.</p>
+          <p class="purpose">📌 Purpose: Grants administrators access to the dashboard and voting metrics.</p>
         </div>
         <div class="auth-card">
           <h5>🙋 User Auth</h5>
-          <p>✅ Token válido, usuario existe en BD y no es admin.</p>
-          <p class="purpose">📌 Acciones de participante (generar QR, enviar voto).</p>
+          <p>✅ Token valid, user exists in DB, and is not admin.</p>
+          <p class="purpose">📌 Purpose: Used for participant actions (e.g., generating QR, submitting a vote).</p>
         </div>
         <div class="auth-card">
           <h5>🤝 Server-to-Server Auth</h5>
-          <p>✅ Token válido y firmado con el secreto compartido.</p>
-          <p class="purpose">📌 Comunicación interna segura entre microservicios Django.</p>
+          <p>✅ Token valid and signed with shared secret.</p>
+          <p class="purpose">📌 Purpose: Secures internal communication between Django microservices.</p>
         </div>
       </div>
         </div>
       </details>
     </section>
 
-    <section class="section" id="technologies">
+    <section class="section animate" id="technologies" style="animation-delay: 0.5s">
       <h2>Technologies</h2>
       <div class="tech-grid">
         <div class="tech-card">
           <h4>🐍 Python Backend</h4>
-          <p>Microservicios Django.</p>
+          <ul>
+            <li>Django microservices.</li>
+          </ul>
         </div>
         <div class="tech-card">
           <h4>📊 QR Dashboard</h4>
-          <p>UI de la encuesta de votación y resultados agregados.</p>
+          <ul>
+            <li>Provides the voting survey UI.</li>
+            <li>Displays aggregated voting results.</li>
+          </ul>
         </div>
         <div class="tech-card">
           <h4>🔲 QR Application</h4>
-          <p>Autenticación, gestión de usuarios anónimos e interacción con la base de datos.</p>
+          <ul>
+            <li>Handles authentication.</li>
+            <li>Manages anonymous users.</li>
+            <li>Interacts with the database.</li>
+          </ul>
         </div>
         <div class="tech-card">
           <h4>📀 Database</h4>
-          <p>PostgreSQL — usuarios anónimos, resultados de votación y definiciones de roles.</p>
+          <ul>
+            <li>PostgreSQL.</li>
+            <li>Stores anonymous user info.</li>
+            <li>Stores voting results.</li>
+            <li>Stores role definitions.</li>
+          </ul>
         </div>
         <div class="tech-card">
           <h4>🔵 Render</h4>
-          <p>Hosting y despliegue de los microservicios, PostgreSQL gestionado, variables de entorno y secretos.</p>
+          <ul>
+            <li>Deploys the Django microservices.</li>
+            <li>Provides a managed PostgreSQL instance.</li>
+            <li>Handles environment variables and secrets.</li>
+          </ul>
         </div>
         <div class="tech-card">
           <h4>👾 GitHub</h4>
-          <p>Control de versiones, colaboración y seguimiento del proyecto.</p>
+          <ul>
+            <li>Version control.</li>
+            <li>Collaboration.</li>
+            <li>Project tracking.</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -148,11 +209,35 @@ import schemaQr from '../../assets/schema_qr.png';
     font-size: 0.9rem;
   }
   .project-hero {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 3rem 2rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
     margin-bottom: 2rem;
   }
   .project-hero h1 {
     font-size: 2.2rem;
     margin-bottom: 0.5rem;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 17, 21, 0.55), rgba(15, 17, 21, 0.95));
+  }
+  .project-hero h1,
+  .project-hero .tagline {
+    position: relative;
+    z-index: 2;
   }
 
   .section {
@@ -240,6 +325,63 @@ import schemaQr from '../../assets/schema_qr.png';
     padding: 0 1.25rem 1.25rem;
   }
 
+  .steps {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    counter-reset: step;
+  }
+
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-badge {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), rgba(79, 140, 255, 0.5));
+    box-shadow: 0 4px 12px rgba(79, 140, 255, 0.3);
+  }
+
+  .step-content {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    background: #14171d;
+  }
+
+  .step-content h5 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    color: var(--accent);
+  }
+
+  .step-content p {
+    margin: 0;
+  }
+
+  .endpoint-list {
+    margin: 0.5rem 0 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
   .schema-figure {
     margin: 1.25rem 0;
   }
@@ -316,6 +458,19 @@ import schemaQr from '../../assets/schema_qr.png';
     box-shadow: 0 8px 24px rgba(79, 140, 255, 0.12);
   }
 
+  .auth-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), rgba(79, 140, 255, 0.1));
+  }
+
   .auth-card h5 {
     font-size: 1rem;
     margin-bottom: 0.5rem;
@@ -325,14 +480,20 @@ import schemaQr from '../../assets/schema_qr.png';
     font-size: 0.875rem;
     margin-top: 0.5rem;
     margin-bottom: 0;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border);
   }
 
   .tech-card h4 {
     margin: 0 0 0.5rem;
     font-size: 1.05rem;
   }
-  .tech-card p {
+  .tech-card ul {
     margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
     color: var(--muted);
     font-size: 0.9rem;
   }

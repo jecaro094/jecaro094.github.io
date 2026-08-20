@@ -1,27 +1,55 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import fotoPerfil from '../assets/foto_perfil.jpeg';
+import qrCover from '../assets/QR voting survey.png';
+import pokeCover from '../assets/PokeAPI.webp';
 
 const projects = [
-  { name: 'QR voting survey', href: '/projects/qr-voting-survey/' },
-  { name: 'Poke API' },
+  { name: 'QR voting survey', href: '/projects/qr-voting-survey/', cover: qrCover },
+  { name: 'Poke API', href: '/projects/pokeapi/', cover: pokeCover },
 ];
 ---
 
 <Layout title="Jesús Caballero Rodríguez — Portfolio">
   <main>
-    <section class="hero">
-      <h1 class="gradient-text animate" style="animation-delay: 0.05s">Jesús Caballero Rodríguez</h1>
-      <p class="tagline animate" style="animation-delay: 0.15s">Backend Engineer · Python · Data Engineering</p>
-      <p class="subtitle animate" style="animation-delay: 0.25s">
-        Ingeniero backend con experiencia en sistemas distribuidos, APIs y data engineering.
-      </p>
+    <section class="hero animate" style="animation-delay: 0.05s">
+      <div class="hero-top">
+        <div class="avatar">
+          <Image src={fotoPerfil} alt="Retrato de Jesús Caballero Rodríguez" width={320} height={320} format="webp" />
+        </div>
+        <div class="hero-heading">
+          <h1 class="gradient-text">Jesús Caballero Rodríguez</h1>
+          <p class="tagline">Backend Engineer · Python · Data Engineering</p>
+        </div>
+      </div>
+      <div class="hero-description">
+        <p class="subtitle">
+          Senior Backend Engineer with 7+ years of experience building scalable APIs, distributed
+          systems, and data platforms with Python. I've worked on microservice architectures with
+          Django and FastAPI across insurance, banking, and analytics, as well as event-driven
+          systems with Kafka and Celery and cloud-native data solutions on AWS.
+        </p>
+        <p class="subtitle">
+          I'm naturally curious and enjoy learning by building things. While backend engineering is
+          my main focus, I regularly explore new technologies and ideas on my own — from React and
+          modern web development to AI agents and developer tooling. I like understanding how
+          things work, experimenting with them, and turning what I learn into real projects.
+        </p>
+        <p class="subtitle">
+          Currently focused on backend, API, data engineering, and exploring how AI can change the
+          way we build software.
+        </p>
+      </div>
     </section>
     <section class="projects-section animate" style="animation-delay: 0.35s">
-      <h2>Proyectos personales</h2>
+      <h2>Personal projects</h2>
       <div class="project-grid">
         {
-          projects.map(({ name, href }) => (
+          projects.map(({ name, href, cover }) => (
             <a class="project-card" role="button" tabindex="0" href={href}>
+              <Image src={cover} alt="" class="card-bg" loading="lazy" />
+              <span class="card-overlay" aria-hidden="true"></span>
               <span class="card-arrow">→</span>
               <h3>{name}</h3>
             </a>
@@ -50,6 +78,62 @@ const projects = [
 </script>
 
 <style>
+  .hero {
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-top {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .avatar {
+    flex-shrink: 0;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--accent), rgba(79, 140, 255, 0.2));
+    box-shadow: 0 12px 40px rgba(79, 140, 255, 0.25);
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    display: block;
+    border: 3px solid var(--bg);
+  }
+
+  .hero-heading h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-description {
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .hero-top {
+      flex-direction: column;
+      text-align: center;
+      gap: 1.25rem;
+    }
+    .avatar {
+      width: 150px;
+      height: 150px;
+    }
+    .hero-heading h1 {
+      font-size: 2rem;
+    }
+    .hero-description {
+      text-align: center;
+    }
+  }
+
   section h2 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
@@ -70,9 +154,37 @@ const projects = [
     padding: 1.5rem;
     background: linear-gradient(145deg, #171b23, #12151b);
     cursor: pointer;
+    overflow: hidden;
     transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
     will-change: transform;
     outline: none;
+  }
+
+  .card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+    transition: opacity 0.3s ease, transform 0.4s ease;
+  }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 17, 21, 0.15), rgba(15, 17, 21, 0.88));
+  }
+
+  .card-arrow,
+  .project-card h3 {
+    position: relative;
+    z-index: 2;
+  }
+
+  .project-card:hover .card-bg {
+    opacity: 0.5;
+    transform: scale(1.06);
   }
 
   .project-card:hover,
