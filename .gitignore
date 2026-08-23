@@ -2,7 +2,7 @@
 dist/
 /cv/
 /projects/
-public/
+# public/
 # generated types
 .astro/
 # dependencies
