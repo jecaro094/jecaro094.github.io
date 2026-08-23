@@ -93,17 +93,27 @@ a:hover {
 }
 
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   border-bottom: 1px solid var(--border);
+  background: rgba(15, 17, 21, 0.7);
+  backdrop-filter: blur(10px);
 }
 
 .site-header .brand {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
   color: var(--fg);
+}
+
+.site-header .brand:hover {
+  color: var(--accent);
 }
 
 .site-header nav {

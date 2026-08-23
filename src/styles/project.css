@@ -1,21 +1,50 @@
 /* Shared styles for project detail pages (project-hero, sections, video, tech grid) */
 
-.back {
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
+.project-page {
+  padding-top: 0;
+}
+
+.back-pill {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-decoration: none;
+  background: rgba(20, 23, 29, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.back-pill:hover {
+  background: rgba(79, 140, 255, 0.25);
+  border-color: rgba(79, 140, 255, 0.5);
+  transform: translateX(-2px);
+  text-decoration: none;
 }
 
 .project-hero {
   position: relative;
   overflow: hidden;
   text-align: center;
-  padding: 3rem 2rem;
+  padding: 6rem 2rem;
   border: 1px solid var(--border);
   border-radius: 16px;
-  margin-bottom: 2rem;
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+  width: 100vw;
+  margin-left: calc((100% - 100vw) / 2);
+  margin-right: calc((100% - 100vw) / 2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 .project-hero h1 {
-  font-size: 2.2rem;
+  font-size: 2.6rem;
   margin-bottom: 0.5rem;
 }
 .hero-bg {
@@ -24,12 +53,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.3;
+  object-position: center;
+  opacity: 0.5;
 }
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(15, 17, 21, 0.55), rgba(15, 17, 21, 0.95));
+  background: radial-gradient(120% 90% at 50% 40%, rgba(15, 17, 21, 0.55) 0%, rgba(15, 17, 21, 0.82) 100%);
 }
 .project-hero h1,
 .project-hero .tagline {
