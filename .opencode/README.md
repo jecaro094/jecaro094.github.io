@@ -25,8 +25,10 @@ Este directorio configura el **agente que mantiene el repo del portfolio** (open
 │   └── project/
 │       └── content.md             # reglas de contenido editorial
 └── skills/
-    └── add-portfolio-project/
-        └── SKILL.md               # skill para estructurar proyectos en projects/<slug>/
+    ├── add-portfolio-project/
+    │   └── SKILL.md               # skill para estructurar proyectos en projects/<slug>/
+    └── deploy/
+        └── SKILL.md               # skill para crear y publicar tags de versión
 ```
 
 ## Qué hace cada capa
@@ -47,7 +49,7 @@ Este directorio configura el **agente que mantiene el repo del portfolio** (open
    - `/add-project` — el usuario describe una experiencia en lenguaje natural y el agente estructura `projects/<slug>/` (+ página en el sitio).
    - `/publish` — build, preflight de contenido y guía de despliegue a GitHub Pages.
    - `/refresh-cv` — sincroniza `cv/cv.md` con la página del CV.
-4. **Skills (lazy loading)**: `add-portfolio-project` se carga solo cuando el usuario describe un proyecto.
+4. **Skills (lazy loading)**: `add-portfolio-project` se carga solo cuando el usuario describe un proyecto; `deploy` se carga cuando el usuario quiere crear un tag de versión.
 
 ## Convenciones y reglas clave
 

@@ -22,6 +22,10 @@ const currentYear = new Date().getFullYear();
   <body>
     <header class="site-header">
       <a class="brand" href="/">jecaro094</a>
+      <nav class="section-nav" aria-label="Sections">
+        <a href="/#experience" class="nav-tab" data-section="experience">Experience</a>
+        <a href="/#projects" class="nav-tab" data-section="projects">Projects</a>
+      </nav>
     </header>
     <slot />
     <footer class="site-footer">
@@ -29,3 +33,47 @@ const currentYear = new Date().getFullYear();
     </footer>
   </body>
 </html>
+
+<style>
+  .section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .nav-tab {
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.2s ease;
+  }
+
+  .nav-tab:hover {
+    color: var(--accent);
+    border-color: rgba(79, 140, 255, 0.5);
+    background: rgba(79, 140, 255, 0.08);
+    text-decoration: none;
+  }
+
+  </style>
+
+<script>
+  function scrollToHash() {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const target = document.querySelector(hash);
+    if (target) {
+      requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  }
+
+  window.addEventListener('load', scrollToHash);
+  window.addEventListener('hashchange', scrollToHash);
+</script>
