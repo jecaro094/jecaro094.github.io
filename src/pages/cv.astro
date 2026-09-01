@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { SOCIAL_LINKS } from '../lib/constants';
 ---
 
 <Layout title="CV — Jesús Caballero Rodríguez">
@@ -13,7 +14,7 @@ import Layout from '../layouts/Layout.astro';
 
     <section class="section animate" id="cv-viewer" style="animation-delay: 0.2s">
       <div class="cv-actions">
-        <a href="/cv/cv_eng_.pdf" download class="download-btn">
+        <a href={SOCIAL_LINKS.cv_path} download class="download-btn">
           <span class="download-icon" aria-hidden="true">↓</span>
           Download CV (PDF)
         </a>
