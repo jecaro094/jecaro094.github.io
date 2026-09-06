@@ -97,6 +97,15 @@ a:hover {
   text-decoration: underline;
 }
 
+a.back-pill:hover,
+a.nav-tab:hover,
+a.social-link:hover,
+a.download-btn:hover,
+a.repo-btn:hover,
+a.card-repo-item:hover {
+  text-decoration: none;
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -111,14 +120,19 @@ a:hover {
 }
 
 .site-header .brand {
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
-  color: var(--fg);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
 .site-header .brand:hover {
-  color: var(--accent);
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+.site-header .brand-icon {
+  display: block;
 }
 
 .site-header nav {

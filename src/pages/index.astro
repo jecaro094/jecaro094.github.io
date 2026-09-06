@@ -25,6 +25,7 @@ const projects = (await getCollection('projects'))
     cover: p.data.cover,
     description: p.data.cardDescription ?? p.data.tagline,
     tech: p.data.cardTech ?? [],
+    repoUrl: p.data.repoUrl,
   }));
 ---
 
@@ -111,8 +112,8 @@ const projects = (await getCollection('projects'))
       </div>
       <div class="project-grid">
         {
-          projects.map(({ name, href, cover, description, tech }) => (
-            <a class="project-card" role="button" tabindex="0" href={href}>
+          projects.map(({ name, href, cover, description, tech, repoUrl }) => (
+            <div class="project-card" role="link" tabindex="0" data-href={href}>
               <Image src={cover} alt="" class="card-bg" loading="lazy" />
               <span class="card-overlay" aria-hidden="true"></span>
               <span class="card-arrow">→</span>
@@ -121,7 +122,21 @@ const projects = (await getCollection('projects'))
               <div class="card-tech">
                 {tech.map(t => <span class="tech-tag">{t}</span>)}
               </div>
-            </a>
+              {repoUrl && (
+                <div class="card-repo" data-urls={Array.isArray(repoUrl) ? repoUrl.join(',') : repoUrl}>
+                  <Image src={githubIcon} alt="" class="card-repo-icon" />
+                  {Array.isArray(repoUrl) && repoUrl.length > 1 && (
+                    <div class="card-repo-dropdown">
+                      {repoUrl.map((url) => (
+                        <a href={url} target="_blank" rel="noopener noreferrer" class="card-repo-item" onclick="event.stopPropagation()">
+                          {url.split('/').slice(-2).join('/')}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           ))
         }
       </div>
@@ -143,6 +158,27 @@ const projects = (await getCollection('projects'))
     card.addEventListener('pointermove', setTilt);
     card.addEventListener('pointerleave', resetTilt);
     card.addEventListener('blur', resetTilt);
+
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.card-repo')) return;
+      window.location.href = card.dataset.href;
+    });
+    card.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.card-repo')) {
+        e.preventDefault();
+        window.location.href = card.dataset.href;
+      }
+    });
+  });
+
+  document.querySelectorAll('.card-repo[data-urls]').forEach((repo) => {
+    repo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const urls = repo.dataset.urls;
+      if (urls && !urls.includes(',')) {
+        window.open(urls, '_blank', 'noopener');
+      }
+    });
   });
 
   const toast = document.createElement('div');
@@ -272,6 +308,7 @@ const projects = (await getCollection('projects'))
     background: linear-gradient(180deg, rgba(79, 140, 255, 0.1), rgba(79, 140, 255, 0.03));
     box-shadow: 0 8px 24px rgba(79, 140, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transform: translateY(-2px);
+    text-decoration: none;
   }
 
   .social-icon-badge {
@@ -519,6 +556,93 @@ const projects = (await getCollection('projects'))
   .project-card:hover .card-arrow {
     opacity: 1;
     transform: translateX(4px);
+  }
+
+  /* ── Card repo icon ──────────────────────────────────── */
+
+  .card-repo {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .card-repo:hover {
+    background: rgba(79, 140, 255, 0.2);
+    border-color: rgba(79, 140, 255, 0.6);
+    transform: scale(1.1);
+  }
+
+  .card-repo-icon {
+    width: 18px;
+    height: 18px;
+    filter: invert(1) brightness(1.2);
+    transition: filter 0.2s ease;
+  }
+
+  .card-repo:hover .card-repo-icon {
+    filter: invert(1) brightness(1.5);
+  }
+
+  .card-repo-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 200px;
+    background: #1a1f28;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.35rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+  }
+
+  .card-repo-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: 10px;
+  }
+
+  .card-repo:hover .card-repo-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .card-repo-item {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-repo-item:hover {
+    background: rgba(79, 140, 255, 0.12);
+    color: var(--accent);
   }
 
   /* ── Timeline / Experience ─────────────────────────────── */

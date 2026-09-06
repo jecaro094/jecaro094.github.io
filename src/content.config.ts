@@ -26,6 +26,9 @@ const projects = defineCollection({
           title: z.string(),
         })
         .optional(),
+      repoUrl: z
+        .union([z.string().url(), z.array(z.string().url())])
+        .optional(),
       code: z
         .object({
           filename: z.string().default(''),
