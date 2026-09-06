@@ -1,109 +1,34 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import { getCollection, getEntry, render } from 'astro:content';
 import { SOCIAL_LINKS } from '../lib/constants';
 import fotoPerfil from '../assets/foto_perfil.jpeg';
-import qrCover from '../assets/QR voting survey.png';
-import pokeCover from '../assets/PokeAPI.webp';
 import linkedinIcon from '../assets/linkedin.avif';
 import githubIcon from '../assets/github.png';
 import cvIcon from '../assets/cv.png';
 
-import mercedesLogo from '../assets/projects/mercedes-benz.jpg';
-import mapfreLogo from '../assets/projects/mapfre.png';
-import santanderLogo from '../assets/projects/santander.png';
-import technestLogo from '../assets/projects/technest.png';
-import quantecLogo from '../assets/projects/quantec.png';
-import grvcLogo from '../assets/projects/grvc.png';
+const home = await getEntry('site', 'home');
+const { heading, tagline } = home.data;
+const { Content: Bio } = await render(home);
 
-const experiences = [
-  {
-    order: 1,
-    period: '2026',
-    company: 'Mercedes-Benz',
-    via: 'Infoser N.T.',
-    role: 'Senior Backend Engineer',
-    summary: 'Databricks ETL, Celery workflows, and FastAPI integration with Open Metadata.',
-    tech: ['Databricks', 'Celery', 'FastAPI', 'Open Metadata'],
-    brandColor: '#00adef',
-    logo: mercedesLogo
-  },
-  {
-    order: 2,
-    period: '2024–2026',
-    company: 'Mapfre',
-    via: 'Softtek',
-    role: 'Senior Backend Engineer',
-    summary: 'Django insurance microservices with OAuth2, Kafka, Celery, and Docker.',
-    tech: ['Django', 'Kafka', 'Celery', 'OAuth2', 'Docker'],
-    brandColor: '#ec0000',
-    logo: mapfreLogo
-  },
-  {
-    order: 3,
-    period: '2023–2024',
-    company: 'Santander',
-    via: 'Softtek',
-    role: 'Senior Backend Engineer',
-    summary: 'Flask APIs for corporate entity data, with pytest and GitLab CI/CD.',
-    tech: ['Flask', 'pytest', 'GitLab CI/CD'],
-    brandColor: '#ec0000',
-    logo: santanderLogo
-  },
-  {
-    order: 4,
-    period: '2021–2023',
-    company: 'Technest',
-    via: '',
-    role: 'Python Backend Developer',
-    summary: 'Analytics APIs, AWS data platform work, GitLab metrics ETL, and a FastAPI dashboards API.',
-    tech: ['Python', 'Django', 'FastAPI', 'Elasticsearch', 'AWS'],
-    brandColor: '#00a99d',
-    logo: technestLogo
-  },
-  {
-    order: 5,
-    period: '2019–2021',
-    company: 'Quantec Data Center SL',
-    via: '',
-    role: 'Fullstack Developer',
-    summary: 'Python systems for wind-turbine monitoring and forest-fire early warning.',
-    tech: ['Python', 'Angular', "Web Socket"],
-    brandColor: '#4caf50',
-    logo: quantecLogo
-  },
-  {
-    order: 6,
-    period: '2018–2019',
-    company: 'GRVC, Universidad de Sevilla',
-    via: '',
-    role: 'Software Developer',
-    summary: 'Aerial robotics with ORB-SLAM on ROS, plus camera and GPS sensor fusion.',
-    tech: ['ROS', 'ORB-SLAM', 'C++'],
-    brandColor: '#5c6bc0',
-    logo: grvcLogo
-  },
-].sort((a, b) => a.order - b.order);
+const experiences = (await getCollection('experience')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 
-const projects = [
-  {
-    name: 'QR Voting Survey',
-    href: '/projects/qr-voting-survey/',
-    cover: qrCover,
-    description: 'Anonymous voting system with QR codes for live events',
-    tech: ['Django', 'JWT', 'PostgreSQL', 'Docker']
-  },
-  {
-    name: 'PokeAPI',
-    href: '/projects/pokeapi/',
-    cover: pokeCover,
-    description: 'Interactive Pokédex with React frontend and FastAPI backend',
-    tech: ['React', 'FastAPI', 'AWS', 'Docker']
-  },
-];
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    name: p.data.cardName ?? p.data.title,
+    href: `/projects/${p.id}/`,
+    cover: p.data.cover,
+    description: p.data.cardDescription ?? p.data.tagline,
+    tech: p.data.cardTech ?? [],
+  }));
 ---
 
-<Layout title="Jesús Caballero Rodríguez — Portfolio">
+<Layout title={home.data.title}>
   <main>
     <section class="hero animate" style="animation-delay: 0.05s">
       <div class="hero-top">
@@ -111,8 +36,8 @@ const projects = [
           <Image src={fotoPerfil} alt="Retrato de Jesús Caballero Rodríguez" width={320} height={320} format="webp" />
         </div>
         <div class="hero-heading">
-          <h1 class="gradient-text">Jesús Caballero Rodríguez</h1>
-          <p class="tagline">Backend Engineer · Python · Data Engineering</p>
+          <h1 class="gradient-text">{heading}</h1>
+          <p class="tagline">{tagline}</p>
           <div class="social-links">
             <div class="social-link" data-url={SOCIAL_LINKS.linkedin} role="link" tabindex="0" aria-label="Abrir LinkedIn">
               <span class="social-icon-badge">
@@ -138,18 +63,7 @@ const projects = [
         </div>
       </div>
       <div class="hero-description">
-        <p class="subtitle">
-          Senior Backend Engineer with 7+ years of experience building scalable APIs, 
-          distributed systems, and data platforms with Python. I’ve worked across insurance, 
-          banking, and analytics with technologies such as Django, FastAPI, Kafka, Celery, and AWS.
-        </p>
-        <p class="subtitle">
-          Curious by nature, I enjoy learning by building and exploring new technologies, 
-          from modern web development to AI and developer tooling.
-        </p>
-        <p class="subtitle">
-          Currently focused on backend, data engineering, and AI-driven software development.
-        </p>
+        <Bio />
       </div>
     </section>
 
@@ -161,14 +75,14 @@ const projects = [
       </div>
       <ol class="timeline">
         {
-          experiences.map((e) => (
+          experiences.map(({ data: e }) => (
             <li class="timeline-item" style={`--mark:${e.brandColor}`}>
               <span class="timeline-marker" aria-hidden="true"></span>
               <div class="timeline-period">
                 <span class="timeline-year">{e.period}</span>
               </div>
               <div class="timeline-body">
-                <article class:list={["timeline-card", e.featured && "timeline-card-featured"]}>
+                <article class="timeline-card">
                   <header class="timeline-head">
                     <Image src={e.logo} alt="" class="timeline-logo" width={40} height={40} />
                     <div class="timeline-titles">
@@ -452,6 +366,11 @@ const projects = [
 
   .hero-description {
     margin-top: 1.5rem;
+  }
+
+  .hero-description :global(p) {
+    color: var(--muted);
+    margin-bottom: 2rem;
   }
 
   @media (max-width: 640px) {

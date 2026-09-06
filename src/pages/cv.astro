@@ -1,28 +1,31 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SOCIAL_LINKS } from '../lib/constants';
+import { getEntry } from 'astro:content';
+
+const cv = await getEntry('site', 'cv');
+const { title, heading, tagline, downloadLabel, pdfPath, imagePath, imageAlt } = cv.data;
 ---
 
-<Layout title="CV — Jesús Caballero Rodríguez">
+<Layout title={title}>
   <main class="project-page">
     <header class="project-hero cv-hero animate" style="animation-delay: 0.1s">
       <a href="/" class="back-pill">← Back</a>
       <span class="hero-overlay" aria-hidden="true"></span>
-      <h1 class="gradient-text">CV</h1>
-      <p class="tagline">Curriculum Vitae</p>
+      <h1 class="gradient-text">{heading}</h1>
+      <p class="tagline">{tagline}</p>
     </header>
 
     <section class="section animate" id="cv-viewer" style="animation-delay: 0.2s">
       <div class="cv-actions">
-        <a href={SOCIAL_LINKS.cv_path} download class="download-btn">
+        <a href={pdfPath} download class="download-btn">
           <span class="download-icon" aria-hidden="true">↓</span>
-          Download CV (PDF)
+          {downloadLabel}
         </a>
       </div>
 
       <div class="cv-container">
         <span class="cv-wrap zoomable">
-          <img src="/cv/cv.png" alt="Curriculum Vitae — Jesús Caballero Rodríguez" class="cv-img" />
+          <img src={imagePath} alt={imageAlt} class="cv-img" />
           <span class="zoom-hint">🔍 Click to view full screen</span>
         </span>
       </div>
