@@ -3,6 +3,7 @@ title: PokeAPI
 tagline: Pokédex with React, FastAPI, and AWS deployment
 cover: ../../assets/PokeAPI.webp
 order: 2
+# repoUrl: https://github.com/jecaro094/pokeapi # NOTE Add suitable github project url
 cardDescription: Interactive Pokédex with React frontend and FastAPI backend
 cardTech:
   - React

@@ -4,6 +4,9 @@ tagline: Anonymous and secure voting with QR codes
 cover: "../../assets/QR voting survey.png"
 order: 1
 cardName: QR Voting Survey
+# repoUrl: # NOTE Add suitable github project url
+#   - https://github.com/jecaro094/qr-voting-backend
+#   - https://github.com/jecaro094/qr-voting-frontend
 cardDescription: Anonymous voting system with QR codes for live events
 cardTech:
   - Django
