@@ -1,41 +1,34 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import { getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
-import pokeCover from '../../assets/PokeAPI.webp';
+import Layout from '../../layouts/Layout.astro';
+
+const entry = await getEntry('projects', 'pokeapi');
+const { title, tagline, cover, demo, technologies } = entry.data;
+const { Content } = await render(entry);
 ---
 
-<Layout title="PokeAPI — Jesús Caballero Rodríguez">
+<Layout title={`${title} — Jesús Caballero Rodríguez`}>
   <main class="project-page">
     <header class="project-hero animate" style="animation-delay: 0.1s">
       <a href="/" class="back-pill">← Back</a>
-      <Image src={pokeCover} alt="" class="hero-bg" loading="lazy" />
+      <Image src={cover} alt="" class="hero-bg" loading="lazy" />
       <span class="hero-overlay" aria-hidden="true"></span>
-      <h1 class="gradient-text">PokeAPI</h1>
-      <p class="tagline">Pokédex with React, FastAPI, and AWS deployment</p>
+      <h1 class="gradient-text">{title}</h1>
+      <p class="tagline">{tagline}</p>
     </header>
 
     <section class="section animate" id="context" style="animation-delay: 0.2s">
       <h2>Context</h2>
-      <p>
-        This project is an API that pulls data from the public Pokémon REST API 🐉 (<a href="https://pokeapi.co" target="_blank" rel="noopener noreferrer">https://pokeapi.co</a>) to show different stats for your favorite Pokémon.
-      </p>
-      <p>
-        With this custom Pokédex 📖, you can filter Pokémon by name 🔍 and check their stats with just one click on the chosen Pokémon.
-      </p>
-      <p>
-        It's a simple but stylish way ✨ to see how different technologies can come together to build a fun Pokédex. The same approach can also be applied to real-world cases: building companion apps 🎮, creating interactive dashboards 📊, or teaching beginners how to work with APIs in an engaging way 🚀.
-      </p>
-      <p>
-        For now, we've kept it simple by using only the PokeAPI REST API ⚡, but the system can easily grow by adding more data and features in the future! 🚀
-      </p>
+      <Content />
     </section>
 
     <section class="section animate" id="demo" style="animation-delay: 0.3s">
       <h2>Demo</h2>
       <div class="video-embed">
         <iframe
-          src="https://www.youtube.com/embed/NaE7lj-nMyk"
-          title="Demo PokeAPI"
+          src={`https://www.youtube.com/embed/${demo.youtubeId}`}
+          title={demo.title}
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
@@ -46,46 +39,21 @@ import pokeCover from '../../assets/PokeAPI.webp';
     <section class="section animate" id="technologies" style="animation-delay: 0.4s">
       <h2>Technologies</h2>
       <div class="tech-grid">
-        <div class="tech-card">
-          <h4>🔵 React frontend</h4>
-          <ul>
-            <li>Graphs for displaying stats 📊</li>
-            <li>Tables with pagination (connected to the database)</li>
-          </ul>
-        </div>
-        <div class="tech-card">
-          <h4>🐍 Python backend</h4>
-          <ul>
-            <li>Framework FastAPI ⚡</li>
-            <li>Authentication 🔐</li>
-            <li>Unit of Work (UoW) pattern for database operations 🗄️</li>
-            <li>DTOs &amp; database models</li>
-          </ul>
-        </div>
-        <div class="tech-card">
-          <h4>🐳 Docker</h4>
-          <ul>
-            <li>Database container</li>
-            <li>Nginx container</li>
-            <li>Frontend container</li>
-            <li>Backend container</li>
-          </ul>
-        </div>
-        <div class="tech-card">
-          <h4>🟡 AWS</h4>
-          <ul>
-            <li>Elastic Beanstalk for deployment ☁️</li>
-          </ul>
-        </div>
-        <div class="tech-card">
-          <h4>👾 GitHub</h4>
-          <ul>
-            <li>GitHub Secrets 🔑</li>
-            <li>GitHub Workflows for automated AWS deployment ⚙️</li>
-            <li>Version control</li>
-          </ul>
-        </div>
+        {
+          technologies.map((tech) => (
+            <div class="tech-card">
+              <h4>{tech.heading}</h4>
+              <ul>
+                {tech.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
       </div>
     </section>
   </main>
 </Layout>
+
+

@@ -170,3 +170,87 @@ main {
   color: var(--muted);
   font-size: 0.875rem;
 }
+
+/* Code block (Astro docs style) */
+.expressive-code {
+  position: relative;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  background: #23262f;
+}
+
+.expressive-code .frame-header {
+  background: #000;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.expressive-code .frame-header .dots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.expressive-code .frame-header .dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: #444;
+}
+
+.expressive-code .frame-header .copy-btn {
+  margin-left: auto;
+  font: inherit;
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0.3rem 0.6rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.expressive-code .frame-header .copy-btn:hover {
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.expressive-code .frame-header .copy-btn.copied {
+  color: #c3e88d;
+  border-color: rgba(195, 232, 141, 0.4);
+}
+
+.expressive-code :is(pre, .astro-code) {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: #d6deeb;
+  tab-size: 4;
+}
+
+/* Keep the current frame background instead of the Night Owl default (#011627) */
+.expressive-code .astro-code {
+  background: #23262f !important;
+}
+
+.expressive-code code {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre;
+  background: none;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+}
