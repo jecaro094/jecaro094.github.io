@@ -45,14 +45,20 @@ const projects = (await getCollection('projects'))
                 <Image src={linkedinIcon} alt="" class="social-icon" />
               </span>
               <span class="social-link-label">LinkedIn</span>
-              <button class="copy-btn" type="button" data-copy={SOCIAL_LINKS.linkedin} aria-label="Copiar enlace de LinkedIn" title="Copiar enlace">⧉</button>
+              <button class="copy-btn" type="button" data-copy={SOCIAL_LINKS.linkedin} aria-label="Copiar enlace de LinkedIn" title="Copiar enlace">
+                <span class="copy-glyph" aria-hidden="true">⧉</span>
+                <span class="copy-check" aria-hidden="true">✓</span>
+              </button>
             </div>
             <div class="social-link" data-url={SOCIAL_LINKS.github} role="link" tabindex="0" aria-label="Abrir GitHub">
               <span class="social-icon-badge">
                 <Image src={githubIcon} alt="" class="social-icon" />
               </span>
               <span class="social-link-label">GitHub</span>
-              <button class="copy-btn" type="button" data-copy={SOCIAL_LINKS.github} aria-label="Copiar enlace de GitHub" title="Copiar enlace">⧉</button>
+              <button class="copy-btn" type="button" data-copy={SOCIAL_LINKS.github} aria-label="Copiar enlace de GitHub" title="Copiar enlace">
+                <span class="copy-glyph" aria-hidden="true">⧉</span>
+                <span class="copy-check" aria-hidden="true">✓</span>
+              </button>
             </div>
             <a href="/cv" class="social-link" role="link" tabindex="0" aria-label="Abrir CV">
               <span class="social-icon-badge">
@@ -181,18 +187,6 @@ const projects = (await getCollection('projects'))
     });
   });
 
-  const toast = document.createElement('div');
-  toast.className = 'copy-toast';
-  document.body.appendChild(toast);
-  let toastTimer;
-
-  const showToast = (msg) => {
-    toast.textContent = msg;
-    toast.classList.add('visible');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('visible'), 1800);
-  };
-
   document.querySelectorAll('.social-link').forEach((pill) => {
     const openUrl = () => {
       const url = pill.dataset.url;
@@ -225,8 +219,8 @@ const projects = (await getCollection('projects'))
         ta.remove();
       }
       btn.classList.add('copied');
-      setTimeout(() => btn.classList.remove('copied'), 1800);
-      showToast('Enlace copiado al portapapeles');
+      clearTimeout(btn._copyTimer);
+      btn._copyTimer = setTimeout(() => btn.classList.remove('copied'), 1600);
     });
   });
 
@@ -351,6 +345,7 @@ const projects = (await getCollection('projects'))
   }
 
   .copy-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -366,6 +361,26 @@ const projects = (await getCollection('projects'))
     transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
   }
 
+  .copy-glyph,
+  .copy-check {
+    display: block;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  /* Green check sits stacked on top of the copy glyph, hidden until copied */
+  .copy-check {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #4ade80;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
   .copy-btn:hover {
     color: var(--accent);
     border-color: rgba(79, 140, 255, 0.6);
@@ -374,31 +389,29 @@ const projects = (await getCollection('projects'))
   }
 
   .copy-btn.copied {
-    color: #4ade80;
     border-color: rgba(74, 222, 128, 0.6);
-    background: rgba(74, 222, 128, 0.1);
+    background: rgba(74, 222, 128, 0.12);
   }
 
-  .copy-toast {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    padding: 0.6rem 1.2rem;
-    border-radius: 10px;
-    background: #171b23;
-    border: 1px solid rgba(74, 222, 128, 0.5);
-    color: var(--fg);
-    font-size: 0.875rem;
+  .copy-btn.copied .copy-glyph {
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    z-index: 100;
+    transform: scale(0.5);
   }
 
-  .copy-toast.visible {
+  .copy-btn.copied .copy-check {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-glyph,
+    .copy-check {
+      transition: opacity 0.18s ease;
+      transform: none;
+    }
+    .copy-btn.copied .copy-check {
+      transform: none;
+    }
   }
 
   .hero-description {
