@@ -1,12 +1,24 @@
 ---
 import '../styles/global.css';
-import '../styles/project.css';
+import '../styles/content.css';
 
 export interface Props {
   title: string;
+  description?: string;
+  /**
+   * Content id (`site/home`, `projects/pokeapi`…). When set, and only under
+   * `astro dev`, the header shows the Edit link that opens this page's `.md`
+   * in the editor.
+   */
+  editSlug?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = 'Portfolio de Jesús Caballero Rodríguez — Backend Engineer',
+  editSlug,
+} = Astro.props;
+const showEdit = import.meta.env.DEV && Boolean(editSlug);
 const currentYear = new Date().getFullYear();
 ---
 
@@ -15,7 +27,7 @@ const currentYear = new Date().getFullYear();
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Portfolio de Jesús Caballero Rodríguez — Backend Engineer" />
+    <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
@@ -36,44 +48,26 @@ const currentYear = new Date().getFullYear();
       <nav class="section-nav" aria-label="Sections">
         <a href="/#experience" class="nav-tab" data-section="experience">Experience</a>
         <a href="/#projects" class="nav-tab" data-section="projects">Projects</a>
+        {showEdit && <a href={`/editor/${editSlug}/edit`} class="nav-tab edit-tab">Edit</a>}
       </nav>
     </header>
     <slot />
     <footer class="site-footer">
       <p>© {currentYear} Jesús Caballero Rodríguez</p>
     </footer>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+      <img src="" alt="" id="lightboxImg" />
+    </div>
   </body>
 </html>
 
-<style>
-  .section-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .nav-tab {
-    font-size: 0.82rem;
-    font-weight: 500;
-    padding: 0.35rem 0.85rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--muted);
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.03);
-    transition: all 0.2s ease;
-  }
-
-  .nav-tab:hover {
-    color: var(--accent);
-    border-color: rgba(79, 140, 255, 0.5);
-    background: rgba(79, 140, 255, 0.08);
-    text-decoration: none;
-  }
-
-  </style>
-
 <script>
+  import { wireInteractions } from '../scripts/interactions';
+
+  wireInteractions();
+
   function scrollToHash() {
     const hash = window.location.hash;
     if (!hash) return;

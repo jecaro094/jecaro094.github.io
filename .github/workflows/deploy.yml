@@ -60,7 +60,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          # The Node adapter splits the build into dist/client (the prerendered
+          # static site) and dist/server (only needed by the dev-only editor
+          # routes). Pages serves the client half.
+          path: dist/client
 
   deploy:
     needs: build

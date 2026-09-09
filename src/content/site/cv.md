@@ -1,9 +1,14 @@
 ---
 title: CV — Jesús Caballero Rodríguez
-heading: CV
 tagline: Curriculum Vitae
-downloadLabel: Download CV (PDF)
-pdfPath: /cv/Jesus_Caballero_Rodriguez_CV.pdf
-imagePath: /cv/cv.png
-imageAlt: Curriculum Vitae — Jesús Caballero Rodríguez
 ---
+
+:::hero{variant="cv"}
+# CV
+
+Curriculum Vitae
+:::
+
+::download[Download CV (PDF)]{href="/cv/Jesus_Caballero_Rodriguez_CV.pdf"}
+
+![Curriculum Vitae — Jesús Caballero Rodríguez](/media/cv.webp)

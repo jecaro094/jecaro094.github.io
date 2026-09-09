@@ -268,3 +268,53 @@ main {
   padding: 0;
   border-radius: 0;
 }
+/* Header section tabs (chrome; the page content is styled in content.css) */
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s ease;
+}
+
+.nav-tab:hover,
+.nav-tab.active {
+  color: var(--accent);
+  border-color: rgba(79, 140, 255, 0.5);
+  background: rgba(79, 140, 255, 0.08);
+  text-decoration: none;
+}
+
+/* Dev-only Edit link */
+.edit-tab {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.edit-tab:hover {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.7);
+  background: rgba(74, 222, 128, 0.1);
+}
+
+/* Inline code in prose */
+code {
+  background: rgba(79, 140, 255, 0.1);
+  border: 1px solid rgba(79, 140, 255, 0.28);
+  border-radius: 6px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.85em;
+  font-family: ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  color: #a9c7ff;
+  white-space: nowrap;
+}
