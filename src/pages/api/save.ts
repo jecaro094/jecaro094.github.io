@@ -14,7 +14,7 @@
  */
 import type { APIRoute } from 'astro';
 import fs from 'node:fs/promises';
-import yaml from 'js-yaml';
+import { load as loadYaml } from 'js-yaml';
 import { splitFrontmatter } from '../../lib/markdown';
 import { resolveContentPath, ContentPathError } from '../../lib/content-files';
 
@@ -48,7 +48,7 @@ export const POST: APIRoute = async ({ request }) => {
   const { frontmatter } = splitFrontmatter(content);
   if (frontmatter !== null) {
     try {
-      yaml.load(frontmatter);
+      loadYaml(frontmatter);
     } catch (err) {
       return json({ error: `Invalid frontmatter YAML: ${(err as Error).message}` }, 422);
     }

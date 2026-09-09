@@ -7,7 +7,7 @@
  * built page can never diverge. Dev-only: 404 in a static build.
  */
 import type { APIRoute } from 'astro';
-import yaml from 'js-yaml';
+import { load as loadYaml } from 'js-yaml';
 import { renderMarkdown, splitFrontmatter } from '../../lib/markdown';
 
 export const prerender = false;
@@ -36,7 +36,7 @@ export const POST: APIRoute = async ({ request }) => {
   const { frontmatter, body } = splitFrontmatter(content);
   if (frontmatter !== null) {
     try {
-      yaml.load(frontmatter);
+      loadYaml(frontmatter);
     } catch (err) {
       return json({ error: `Invalid frontmatter YAML: ${(err as Error).message}` }, 422);
     }
