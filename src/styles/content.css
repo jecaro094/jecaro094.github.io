@@ -457,7 +457,14 @@
   min-width: 0;
 }
 
-.timeline-role {
+/*
+ * The timeline lives inside a `## Experience` section, so the generic
+ * `.section h3` / `.section p` / `.section ul` typography would otherwise win on
+ * specificity and inject margins (a ~1.5rem gap above every role title, extra
+ * space under the company line and the chip row). Scoping these with `.section`
+ * keeps the card as tight as the standalone component on jecaro094.github.io.
+ */
+.section .timeline-role {
   font-size: 1.05rem;
   font-weight: 650;
   color: var(--fg);
@@ -465,7 +472,7 @@
   margin: 0;
 }
 
-.timeline-company {
+.section .timeline-company {
   font-size: 0.88rem;
   color: var(--muted);
   line-height: 1.3;
@@ -478,7 +485,7 @@
   color: color-mix(in srgb, var(--muted) 65%, transparent);
 }
 
-.timeline-summary {
+.section .timeline-summary {
   font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.55;
@@ -507,9 +514,14 @@
   transition: border-color 0.2s, color 0.2s;
 }
 
-.timeline-card .tech-tags {
+/*
+ * `.section ul` sets `margin: 0 0 0.75rem 1.25rem` — the extra `.section`
+ * qualifier here is what lets the chip row sit flush at the bottom of the card
+ * with no left indent, before the card's own padding.
+ */
+.section .timeline-card .tech-tags {
   gap: 0.35rem;
-  margin-top: 0;
+  margin: 0;
 }
 
 .timeline-card .tech-tag {
@@ -1201,7 +1213,7 @@
     height: 32px;
   }
 
-  .timeline-role {
+  .section .timeline-role {
     font-size: 0.95rem;
   }
 }
