@@ -373,15 +373,15 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 89px;
+  left: 111px;
   width: 1px;
   background: var(--border);
 }
 
 .timeline-item {
   display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 100px 1fr;
+  gap: 1.75rem;
   position: relative;
   padding-bottom: 2rem;
 }
@@ -391,8 +391,9 @@
 }
 
 .timeline-period {
-  text-align: center;
+  text-align: right;
   padding-top: 0.15rem;
+  padding-right: 0.35rem;
   position: relative;
 }
 
@@ -410,7 +411,7 @@
 
 .timeline-marker {
   position: absolute;
-  left: 85px;
+  left: 107px;
   top: 0.15rem;
   width: 9px;
   height: 9px;
