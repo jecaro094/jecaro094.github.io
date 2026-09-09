@@ -4,20 +4,21 @@
  *
  * Reads the raw `.md` from `src/content/`, server-renders the first preview so
  * the pane is populated before JS boots, then hands off to a CodeMirror 6 client
- * script. On a static build `import.meta.env.DEV` is false and this route 404s —
- * the published site is read-only.
+ * script. Where the editor is disabled (`ENABLE_EDITOR`, on by default under
+ * `astro dev`) this route 404s — the published site is read-only.
  */
 export const prerender = false;
 
 import fs from 'node:fs/promises';
 import { resolveContentPath, ContentPathError } from '../../../lib/content-files';
 import { renderMarkdown, splitFrontmatter } from '../../../lib/markdown';
+import { EDITOR_ENABLED } from '../../../lib/editor-enabled';
 import '../../../styles/global.css';
 import '../../../styles/content.css';
 import '../../../styles/editor.css';
 
-if (!import.meta.env.DEV) {
-  return new Response('The editor is only available under `astro dev`.', {
+if (!EDITOR_ENABLED) {
+  return new Response('The editor is disabled here (set ENABLE_EDITOR).', {
     status: 404,
   });
 }

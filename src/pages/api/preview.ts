@@ -4,11 +4,13 @@
  * `POST { content: string }` — the full raw `.md` buffer. The frontmatter is
  * split off and validated as YAML; the body is compiled through the *same*
  * pipeline as the published pages (`src/lib/markdown.ts`) so the preview and the
- * built page can never diverge. Dev-only: 404 in a static build.
+ * built page can never diverge. Gated on `ENABLE_EDITOR` (on by default under
+ * `astro dev`): 404 wherever the editor is disabled.
  */
 import type { APIRoute } from 'astro';
 import { load as loadYaml } from 'js-yaml';
 import { renderMarkdown, splitFrontmatter } from '../../lib/markdown';
+import { EDITOR_ENABLED } from '../../lib/editor-enabled';
 
 export const prerender = false;
 
@@ -20,7 +22,7 @@ function json(data: unknown, status = 200): Response {
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  if (!import.meta.env.DEV) return new Response('Not found', { status: 404 });
+  if (!EDITOR_ENABLED) return new Response('Not found', { status: 404 });
 
   let content: string;
   try {

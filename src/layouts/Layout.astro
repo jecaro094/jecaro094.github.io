@@ -1,14 +1,15 @@
 ---
 import '../styles/global.css';
 import '../styles/content.css';
+import { EDITOR_ENABLED } from '../lib/editor-enabled';
 
 export interface Props {
   title: string;
   description?: string;
   /**
-   * Content id (`site/home`, `projects/pokeapi`…). When set, and only under
-   * `astro dev`, the header shows the Edit link that opens this page's `.md`
-   * in the editor.
+   * Content id (`site/home`, `projects/pokeapi`…). When set, and only where the
+   * editor is enabled (`ENABLE_EDITOR`, on by default under `astro dev`), the
+   * header shows the Edit link that opens this page's `.md` in the editor.
    */
   editSlug?: string;
 }
@@ -18,7 +19,7 @@ const {
   description = 'Portfolio de Jesús Caballero Rodríguez — Backend Engineer',
   editSlug,
 } = Astro.props;
-const showEdit = import.meta.env.DEV && Boolean(editSlug);
+const showEdit = EDITOR_ENABLED && Boolean(editSlug);
 const currentYear = new Date().getFullYear();
 ---
 

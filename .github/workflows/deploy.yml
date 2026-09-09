@@ -34,6 +34,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          ENABLE_EDITOR: ${{ vars.ENABLE_EDITOR || 'false' }}
 
   build:
     if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
@@ -53,6 +55,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          ENABLE_EDITOR: ${{ vars.ENABLE_EDITOR || 'false' }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

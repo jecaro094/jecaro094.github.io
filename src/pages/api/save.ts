@@ -3,7 +3,8 @@
  *
  * `POST { slug: string, content: string }` → overwrites `<slug>.md` inside
  * `src/content/`. Guards, in order:
- *   - 403 unless running under `astro dev` (`import.meta.env.DEV`).
+ *   - 403 unless the editor is enabled (`ENABLE_EDITOR`, on by default under
+ *     `astro dev`).
  *   - slug resolved with `resolveContentPath` (rejects `..` / absolute / non-`.md`).
  *   - 404 if the target file does not already exist — the editor only edits,
  *     never creates. Adding a page stays a filesystem operation.
@@ -17,6 +18,7 @@ import fs from 'node:fs/promises';
 import { load as loadYaml } from 'js-yaml';
 import { splitFrontmatter } from '../../lib/markdown';
 import { resolveContentPath, ContentPathError } from '../../lib/content-files';
+import { EDITOR_ENABLED } from '../../lib/editor-enabled';
 
 export const prerender = false;
 
@@ -28,7 +30,7 @@ function json(data: unknown, status = 200): Response {
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  if (!import.meta.env.DEV) {
+  if (!EDITOR_ENABLED) {
     return json({ error: 'Editing is disabled on the published site' }, 403);
   }
 

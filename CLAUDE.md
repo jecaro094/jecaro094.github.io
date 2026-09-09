@@ -84,9 +84,9 @@ cover in `public/media/covers/`, and copy `pokeapi.astro` to
 
 ### The editor (dev-only)
 
-Reached from the **Edit** link `Layout.astro` adds to the header when
-`import.meta.env.DEV`, driven by the `editSlug` prop each page passes
-(`site/home`, `projects/pokeapi`…).
+Reached from the **Edit** link `Layout.astro` adds to the header when the editor
+is enabled, driven by the `editSlug` prop each page passes (`site/home`,
+`projects/pokeapi`…).
 
 - `src/pages/editor/[...slug]/edit.astro` (`prerender = false`) — reads the raw
   `.md`, server-renders the first preview, then mounts CodeMirror 6 (Markdown
@@ -96,14 +96,19 @@ Reached from the **Edit** link `Layout.astro` adds to the header when
   (422) → `renderMarkdown(body)` → `{ html }`. Debounced ~200 ms, stale responses
   dropped by a sequence counter.
 - `src/pages/api/save.ts` — `POST { slug, content }`. Guards in order: 403 unless
-  DEV, path resolution, 404 if the file does not already exist (the editor edits,
-  never creates), 422 on invalid YAML. After the write the Content Layer's watch
-  on `src/content/` HMRs the published page.
+  the editor is enabled, path resolution, 404 if the file does not already exist
+  (the editor edits, never creates), 422 on invalid YAML. After the write the
+  Content Layer's watch on `src/content/` HMRs the published page.
 - `src/lib/content-files.ts` — `resolveContentPath()`, the path-safety boundary
   shared by the edit page and `/api/save`.
+- `src/lib/editor-enabled.ts` — exports `EDITOR_ENABLED`, the single switch every
+  editor route and the header link check.
 
-Every one of those routes guards on `import.meta.env.DEV`, so even when the Node
-server runs the built site the editor stays unreachable.
+`EDITOR_ENABLED` is `ENABLE_EDITOR` (an `astro:env` server var, declared in
+`astro.config.mjs`, default `false`) OR `import.meta.env.DEV`. So the editor is
+on by default under `astro dev`, and a build exposes it only when
+`ENABLE_EDITOR=true` is set explicitly — the published static site never carries
+the API routes anyway, so it stays unreachable there regardless.
 
 ### Images
 
@@ -151,6 +156,10 @@ edit. Two approaches have been explicitly rejected and must not be reintroduced:
 
 So shipping a content change to the live site requires pushing a version tag, not
 just merging to `main`.
+
+Both build steps run with `ENABLE_EDITOR: ${{ vars.ENABLE_EDITOR || 'false' }}`,
+so the deployed site is editor-off unless the `ENABLE_EDITOR` repo **variable**
+(Settings → Secrets and variables → Actions → Variables) is set to `true`.
 
 ## Stale documentation — trust `src/`
 
