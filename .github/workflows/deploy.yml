@@ -34,6 +34,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          ENABLE_EDITOR: ${{ vars.ENABLE_EDITOR || 'false' }}
 
   build:
     if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
@@ -53,6 +55,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          ENABLE_EDITOR: ${{ vars.ENABLE_EDITOR || 'false' }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -60,7 +64,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          # The Node adapter splits the build into dist/client (the prerendered
+          # static site) and dist/server (only needed by the dev-only editor
+          # routes). Pages serves the client half.
+          path: dist/client
 
   deploy:
     needs: build
