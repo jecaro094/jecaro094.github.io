@@ -86,6 +86,14 @@ Aerial robotics with ORB-SLAM on ROS, plus camera and GPS sensor fusion.
 
 ## Featured Projects {#projects}
 
+:::project{href="/projects/iot-observability-pipeline/" cover="/media/covers/iot-observability-pipeline.webp" repo="https://github.com/jecaro094/iot-observability-pipeline"}
+### IoT Observability Pipeline
+
+Event-driven IoT telemetry with real-time stream enrichment
+
+`FastAPI` `Celery` `Kafka` `Redis` `Docker`
+:::
+
 :::project{href="/projects/qr-voting-survey/" cover="/media/covers/qr-voting-survey.webp"}
 ### QR Voting Survey
 
@@ -101,3 +109,4 @@ Interactive Pokédex with React frontend and FastAPI backend
 
 `React` `FastAPI` `AWS` `Docker`
 :::
+
