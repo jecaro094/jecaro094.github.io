@@ -69,14 +69,6 @@ Analytics APIs, AWS data platform work, GitLab metrics ETL, and a FastAPI dashbo
 
 ## Featured Projects {#projects}
 
-:::project{href="/projects/llm-delivery-pipeline/" cover="/media/covers/llm-delivery-pipeline.webp" repo="https://github.com/jecaro094/llm_delivery_pipeline" docs="https://jecaro094.github.io/tech-docs/projects/llm-delivery-pipeline/"}
-### LLM Delivery Pipeline
-
-Ships a model through an untrusted Kubernetes cluster with AES-256-GCM encryption and Ed25519 signing — plaintext never touches disk
-
-`Kubernetes` `AES-256-GCM` `Ed25519` `Hugging Face` `Python`
-:::
-
 :::project{href="/projects/iot-observability-pipeline/" cover="/media/covers/iot-observability-pipeline.webp" repo="https://github.com/jecaro094/iot-observability-pipeline" docs="https://jecaro094.github.io/tech-docs/projects/iot-observability-pipeline/"}
 ### IoT Observability Pipeline
 
