@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jecaro094.github.io/sitemap-index.xml

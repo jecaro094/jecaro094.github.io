@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getEntry, render } from 'astro:content';
+
+// The slug is hardcoded here and must match the content filename
+// (src/content/projects/iot-observability-pipeline.md) — see CLAUDE.md.
+const entry = await getEntry('projects', 'iot-observability-pipeline');
+const { Content } = await render(entry);
+---
+
+<Layout
+  title={`${entry.data.title} — Jesús Caballero Rodríguez`}
+  description={entry.data.tagline}
+  editSlug="projects/iot-observability-pipeline"
+>
+  <main class="page page-doc">
+    <Content />
+  </main>
+</Layout>

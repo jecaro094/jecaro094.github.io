@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
 import node from '@astrojs/node';
+import sitemap from '@astrojs/sitemap';
 import { remarkPlugins, rehypePlugins, shikiTheme } from './src/lib/markdown.ts';
 
 // https://astro.build/config
@@ -13,6 +14,10 @@ export default defineConfig({
   // `false`, so the published site is read-only.
   output: 'static',
   adapter: node({ mode: 'standalone' }),
+  // Per-page `sitemap-index.xml` / `sitemap-0.xml` under `/` for the 7 static
+  // pages. Dev-only routes (`/editor/**`, `/api/*`) stay out automatically
+  // because they are not prerendered.
+  integrations: [sitemap()],
   // The editor switch. Unset it still turns on under `astro dev`; a build only
   // exposes the editor when this is explicitly `true`.
   env: {

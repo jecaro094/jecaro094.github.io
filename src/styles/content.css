@@ -68,6 +68,13 @@
   margin-top: 0.85rem;
 }
 
+/* Trailing pill (e.g. "Full experience →") that closes a home section:
+   centered so it doesn't compete with the timeline's left-aligned rows. */
+.page-home .section > .social-links {
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
 .social-link {
   display: inline-flex;
   align-items: center;
@@ -275,6 +282,35 @@
 .project-hero .tagline {
   position: relative;
   z-index: 2;
+}
+
+.project-hero .social-links {
+  position: relative;
+  z-index: 2;
+  justify-content: center;
+}
+
+.hero-icons {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+/* The hero's cover is brighter and busier than a card's, so its badges need
+   an even stronger backing to stay legible. */
+.hero-icons .card-icon-btn {
+  background: rgba(15, 17, 21, 0.65);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.hero-icons .card-icon-btn:hover {
+  background: rgba(79, 140, 255, 0.35);
 }
 
 /* ── Sections ──────────────────────────────────────────── */
@@ -505,6 +541,9 @@
 }
 
 .tech-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.7rem;
   font-weight: 500;
   padding: 0.2rem 0.5rem;
@@ -513,6 +552,12 @@
   color: var(--muted);
   background: rgba(255, 255, 255, 0.03);
   transition: border-color 0.2s, color 0.2s;
+}
+
+.tech-tag-icon {
+  width: 0.85em;
+  height: 0.85em;
+  flex-shrink: 0;
 }
 
 /*
@@ -618,41 +663,67 @@
   transform: translateX(4px);
 }
 
-.card-repo {
+.card-icons {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
   z-index: 10;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+}
+
+.card-icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(12, 14, 18, 0.55);
+  backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-.card-repo:hover {
+/* Hero icons carry a text label, so they read as pills rather than round badges. */
+.card-icon-btn.has-label {
+  width: auto;
+  height: auto;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+}
+
+.card-icon-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.card-icon-btn:hover {
   background: rgba(79, 140, 255, 0.2);
   border-color: rgba(79, 140, 255, 0.6);
   transform: scale(1.1);
 }
 
-.card-repo-icon {
+.card-icon-img {
   width: 18px;
   height: 18px;
-  filter: invert(1) brightness(1.2);
   transition: filter 0.2s ease;
 }
 
-.card-repo:hover .card-repo-icon {
+.card-repo .card-icon-img {
+  filter: invert(1) brightness(1.2);
+}
+
+.card-repo.card-icon-btn:hover .card-icon-img {
   filter: invert(1) brightness(1.5);
 }
 
-.card-repo-dropdown {
+.card-icon-dropdown {
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
@@ -669,7 +740,7 @@
   pointer-events: none;
 }
 
-.card-repo-dropdown::before {
+.card-icon-dropdown::before {
   content: "";
   position: absolute;
   top: -10px;
@@ -678,14 +749,14 @@
   height: 10px;
 }
 
-.card-repo:hover .card-repo-dropdown {
+.card-icon-btn:hover .card-icon-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
 }
 
-.card-repo-item {
+.card-icon-item {
   display: block;
   padding: 0.5rem 0.75rem;
   font-size: 0.78rem;
@@ -698,7 +769,7 @@
   text-overflow: ellipsis;
 }
 
-.card-repo-item:hover {
+.card-icon-item:hover {
   background: rgba(79, 140, 255, 0.12);
   color: var(--accent);
 }
@@ -791,9 +862,10 @@
   border: 0;
 }
 
-/* ── Repo buttons and the CV download ──────────────────── */
+/* ── Repo/docs buttons and the CV download ─────────────── */
 
-.repo-links {
+.repo-links,
+.docs-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -801,6 +873,7 @@
 }
 
 .repo-btn,
+.docs-btn,
 .download-btn {
   display: inline-flex;
   align-items: center;
@@ -817,6 +890,7 @@
 }
 
 .repo-btn:hover,
+.docs-btn:hover,
 .download-btn:hover {
   border-color: rgba(79, 140, 255, 0.55);
   background: rgba(79, 140, 255, 0.08);
@@ -825,11 +899,15 @@
   text-decoration: none;
 }
 
-.repo-btn-icon {
+.repo-btn-icon,
+.docs-btn-icon {
   width: 20px;
   height: 20px;
-  filter: invert(1) brightness(1.2);
   transition: filter 0.2s ease;
+}
+
+.repo-btn-icon {
+  filter: invert(1) brightness(1.2);
 }
 
 .repo-btn:hover .repo-btn-icon {
@@ -840,6 +918,14 @@
   display: flex;
   justify-content: center;
   margin-bottom: 1.5rem;
+}
+
+/* Inside a project/cv banner the action list sits under the absolutely
+   positioned overlay, so it needs to climb above it to stay clickable. */
+.project-hero .cv-actions {
+  position: relative;
+  z-index: 2;
+  margin: 1.25rem 0 0;
 }
 
 .download-btn {
