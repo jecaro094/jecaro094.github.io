@@ -11,6 +11,7 @@ Backend Engineer · Python · Data Engineering
 - :link[LinkedIn]{href="https://www.linkedin.com/in/jesus-caballero-rodriguez/" icon="/media/icons/linkedin.webp" copy}
 - :link[GitHub]{href="https://github.com/jecaro094" icon="/media/icons/github.webp" copy}
 - :link[CV →]{href="/cv" icon="/media/icons/cv.webp"}
+- :link[Tech Docs ↗]{href="https://jecaro094.github.io/tech-docs" icon="/media/icons/tech-docs.svg"}
 
 Senior Backend Engineer with 7+ years of experience building scalable APIs,
 distributed systems, and data platforms with Python. I've worked across insurance,
@@ -64,48 +65,38 @@ Analytics APIs, AWS data platform work, GitLab metrics ETL, and a FastAPI dashbo
 `Python` `Django` `FastAPI` `Elasticsearch` `AWS`
 :::
 
-:::role{period="2019–2021" logo="/media/logos/quantec.webp" color="#4caf50"}
-### Fullstack Developer
-
-Quantec Data Center SL
-
-Python systems for wind-turbine monitoring and forest-fire early warning.
-
-`Python` `Angular` `Web Socket`
-:::
-
-:::role{period="2018–2019" logo="/media/logos/grvc.webp" color="#5c6bc0"}
-### Software Developer
-
-GRVC, Universidad de Sevilla
-
-Aerial robotics with ORB-SLAM on ROS, plus camera and GPS sensor fusion.
-
-`ROS` `ORB-SLAM` `C++`
-:::
+- :link[Full experience →]{href="/cv" icon="/media/icons/cv.webp"}
 
 ## Featured Projects {#projects}
 
-:::project{href="/projects/iot-observability-pipeline/" cover="/media/covers/iot-observability-pipeline.webp" repo="https://github.com/jecaro094/iot-observability-pipeline"}
+:::project{href="/projects/llm-delivery-pipeline/" cover="/media/covers/llm-delivery-pipeline.webp" repo="https://github.com/jecaro094/llm_delivery_pipeline" docs="https://jecaro094.github.io/tech-docs/projects/llm-delivery-pipeline/"}
+### LLM Delivery Pipeline
+
+Ships a model through an untrusted Kubernetes cluster with AES-256-GCM encryption and Ed25519 signing — plaintext never touches disk
+
+`Kubernetes` `AES-256-GCM` `Ed25519` `Hugging Face` `Python`
+:::
+
+:::project{href="/projects/iot-observability-pipeline/" cover="/media/covers/iot-observability-pipeline.webp" repo="https://github.com/jecaro094/iot-observability-pipeline" docs="https://jecaro094.github.io/tech-docs/projects/iot-observability-pipeline/"}
 ### IoT Observability Pipeline
 
-Event-driven IoT telemetry with real-time stream enrichment
+Correlates camera and sensor events from 500 concurrent simulated devices in real time, with no database in the hot path
 
 `FastAPI` `Celery` `Kafka` `Redis` `Docker`
 :::
 
-:::project{href="/projects/qr-voting-survey/" cover="/media/covers/qr-voting-survey.webp"}
+:::project{href="/projects/qr-voting-survey/" cover="/media/covers/qr-voting-survey.webp" demo="https://www.youtube.com/watch?v=QXVFPCbwpvA"}
 ### QR Voting Survey
 
-Anonymous voting system with QR codes for live events
+Anonymous 1-QR-1-vote system for live events, enforced server-side with JWT and duplicate-use blocking
 
 `Django` `JWT` `PostgreSQL` `Docker`
 :::
 
-:::project{href="/projects/pokeapi/" cover="/media/covers/pokeapi.webp"}
+:::project{href="/projects/pokeapi/" cover="/media/covers/pokeapi.webp" demo="https://www.youtube.com/watch?v=NaE7lj-nMyk"}
 ### PokeAPI
 
-Interactive Pokédex with React frontend and FastAPI backend
+Full-stack Pokédex with a React UI, a FastAPI backend, and automated CI/CD deployment to AWS
 
 `React` `FastAPI` `AWS` `Docker`
 :::

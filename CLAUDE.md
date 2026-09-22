@@ -53,7 +53,7 @@ Directive vocabulary (on top of GFM, Shiki and `:::note|info|tip|warning|danger`
 
 | Markup | Renders |
 | --- | --- |
-| `:::hero{photo=…}` / `:::hero{cover=… variant=…}` | Page header: `#` title, first paragraph tagline, `:link` list action pills, rest bio |
+| `:::hero{photo=…}` / `:::hero{cover=… variant=… repo=… docs=…}` | Page header: `#` title, first paragraph tagline, `:link` list action pills, rest bio. On the `cover` (project/CV) form, `repo`/`docs` add the same repo/docs icon buttons as `:::project` cards, top-right of the banner |
 | `:link[GitHub]{href=… icon=… copy}` | Action pill, with a copy-to-clipboard button when `copy` is set |
 | `:::role{period=… logo=… color=…}` | Experience timeline entry |
 | `:::project{href=… cover=… repo=…}` | Featured project card |
@@ -62,6 +62,7 @@ Directive vocabulary (on top of GFM, Shiki and `:::note|info|tip|warning|danger`
 | `:::details[Title]` | Collapsible `<details>` |
 | `:::steps` / `:::flow` / `:::endpoints` | Numbered step cards / walkthrough list / endpoint cards |
 | `:::repos` | Link list → GitHub buttons |
+| `:::docs` | Link list → documentation buttons (same shape as `:::repos`, docs icon) |
 | `::download[Label]{href=…}` | Download button |
 | Paragraph of only `` `code` `` | Row of technology chips |
 | `![alt](/media/x.webp "Caption")` | Zoomable figure wired to the page lightbox |

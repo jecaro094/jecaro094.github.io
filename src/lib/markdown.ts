@@ -26,6 +26,49 @@ export const shikiTheme = 'night-owl' as const;
 /** Icon used by the repo buttons and the GitHub pill. */
 const GITHUB_ICON = '/media/icons/github.webp';
 
+/** Icon used by the docs buttons (write-ups / technical docs). */
+const DOCS_ICON = '/media/icons/tech-docs.svg';
+
+/**
+ * Tech-chip name → Simple Icons slug, for the icon shown next to a tag in
+ * `tagRowToList`. Rendered in `--fg` via the CDN's color param so it reads on
+ * the site's dark chips. Only names with a verified slug are listed — anything
+ * else falls back to a text-only chip.
+ */
+const TECH_ICON_SLUGS: Record<string, string> = {
+  python: 'python',
+  'c++': 'cplusplus',
+  django: 'django',
+  fastapi: 'fastapi',
+  flask: 'flask',
+  kafka: 'apachekafka',
+  celery: 'celery',
+  elasticsearch: 'elasticsearch',
+  databricks: 'databricks',
+  docker: 'docker',
+  'gitlab ci/cd': 'gitlab',
+  pytest: 'pytest',
+  angular: 'angular',
+  react: 'react',
+  postgresql: 'postgresql',
+  jwt: 'jsonwebtokens',
+  kubernetes: 'kubernetes',
+  'hugging face': 'huggingface',
+  redis: 'redis',
+};
+
+function techIconUrl(name: string): string | null {
+  const slug = TECH_ICON_SLUGS[name.toLowerCase()];
+  return slug ? `https://cdn.simpleicons.org/${slug}/e6e8eb` : null;
+}
+
+/** Icon used by the project card's demo button — inline so no new binary asset is needed. */
+const DEMO_ICON =
+  'data:image/svg+xml,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff"><path d="M8 5v14l11-7z"/></svg>',
+  );
+
 /**
  * Split a raw `.md` string into its YAML frontmatter block and the Markdown
  * body. Shared by the editor page and the `/api/*` endpoints so all three strip
@@ -105,9 +148,14 @@ function isTagRow(node: Node): boolean {
 function tagRowToList(node: Node): Node {
   const items = node.children
     .filter((c: Node) => c.type === 'inlineCode')
-    .map((c: Node) =>
-      el('li', { className: ['tech-tag'] }, [{ type: 'text', value: c.value }]),
-    );
+    .map((c: Node) => {
+      const iconUrl = techIconUrl(c.value);
+      const children: Node[] = iconUrl
+        ? [leaf('img', { className: ['tech-tag-icon'], src: iconUrl, alt: '', loading: 'lazy' })]
+        : [];
+      children.push({ type: 'text', value: c.value });
+      return el('li', { className: ['tech-tag'] }, children);
+    });
   return el('ul', { className: ['tech-tags'], 'aria-label': 'Technologies' }, items);
 }
 
@@ -242,7 +290,19 @@ function linkPill(node: Node): Node {
     );
   }
 
-  return el('a', { className: ['social-link'], href, 'aria-label': `Open ${label}` }, children);
+  // External URIs leave the site, so they open in a new tab (`↗` labels
+  // already advertise that); internal links like `/cv` navigate in place.
+  const isExternal = /^https?:\/\//.test(href);
+  return el(
+    'a',
+    {
+      className: ['social-link'],
+      href,
+      ...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+      'aria-label': `Open ${label}`,
+    },
+    children,
+  );
 }
 
 /** True for a list item that holds nothing but a single `:link` directive. */
@@ -293,7 +353,7 @@ export function remarkHero() {
   return (tree: MdastRoot) => {
     visit(tree, 'containerDirective', (node: Node, index, parent) => {
       if (node.name !== 'hero' || parent == null || index == null) return;
-      const { photo, cover, alt = '', back, variant } = attrs(node);
+      const { photo, cover, alt = '', back, variant, repo, docs } = attrs(node);
       const rest = [...node.children];
 
       const heading = takeHeading(rest, 1);
@@ -316,6 +376,13 @@ export function remarkHero() {
         children.push(leaf('span', { className: ['hero-overlay'], 'aria-hidden': 'true' }));
         children.push(title);
         if (tagline) children.push(tagline);
+        const icons = [
+          cardIconButton('docs', DOCS_ICON, docs, 'Docs'),
+          cardIconButton('repo', GITHUB_ICON, repo, 'GitHub'),
+        ].filter((icon): icon is Node => icon !== null);
+        if (icons.length > 0) {
+          children.push(el('div', { className: ['hero-icons'] }, icons));
+        }
         children.push(...rest);
         return replace(
           parent,
@@ -418,12 +485,12 @@ export function remarkRoles() {
 
 /* ──────────────────────────── project cards ──────────────────────────── */
 
-/** `:::project{href=… cover=… repo=…}` → one card of the featured grid. */
+/** `:::project{href=… cover=… repo=… docs=…}` → one card of the featured grid. */
 export function remarkProjectCards() {
   return (tree: MdastRoot) => {
     visit(tree, 'containerDirective', (node: Node, index, parent) => {
       if (node.name !== 'project' || parent == null || index == null) return;
-      const { href = '#', cover, repo, alt = '' } = attrs(node);
+      const { href = '#', cover, repo, docs, demo, alt = '' } = attrs(node);
       const rest = [...node.children];
 
       const heading = takeHeading(rest, 3);
@@ -441,31 +508,14 @@ export function remarkProjectCards() {
       if (tags) children.push(tags);
       children.push(...rest);
 
-      const repos = (repo ?? '')
-        .split(',')
-        .map((url) => url.trim())
-        .filter(Boolean);
-      if (repos.length > 0) {
-        const dropdown =
-          repos.length > 1
-            ? [
-                el(
-                  'div',
-                  { className: ['card-repo-dropdown'] },
-                  repos.map((url) =>
-                    el('a', { href: url, className: ['card-repo-item'], target: '_blank', rel: 'noopener noreferrer' }, [
-                      { type: 'text', value: repoLabel(url) },
-                    ]),
-                  ),
-                ),
-              ]
-            : [];
-        children.push(
-          el('div', { className: ['card-repo'], 'data-urls': repos.join(',') }, [
-            leaf('img', { src: GITHUB_ICON, alt: '', className: ['card-repo-icon'] }),
-            ...dropdown,
-          ]),
-        );
+      const icons = [
+        cardIconButton('demo', DEMO_ICON, demo),
+        cardIconButton('docs', DOCS_ICON, docs),
+        cardIconButton('repo', GITHUB_ICON, repo),
+      ].filter((icon): icon is Node => icon !== null);
+
+      if (icons.length > 0) {
+        children.push(el('div', { className: ['card-icons'] }, icons));
       }
 
       return replace(
@@ -486,6 +536,54 @@ function repoLabel(url: string): string {
   return url.replace(/\/+$/, '').split('/').slice(-2).join('/');
 }
 
+/**
+ * Builds a `card-icons` button from a comma-separated list of URLs, shared by
+ * `repo=` and `docs=` on `:::project` and `:::hero`. A single URL opens
+ * directly (handled by `data-urls` in `interactions.ts`); several show a hover
+ * dropdown. `label`, passed by the hero, adds visible text next to the icon —
+ * the card version stays icon-only to save space.
+ */
+function cardIconButton(
+  kind: 'repo' | 'docs' | 'demo',
+  icon: string,
+  raw: string | undefined,
+  label?: string,
+): Node | null {
+  const urls = (raw ?? '')
+    .split(',')
+    .map((url) => url.trim())
+    .filter(Boolean);
+  if (urls.length === 0) return null;
+
+  const dropdown =
+    urls.length > 1
+      ? [
+          el(
+            'div',
+            { className: ['card-icon-dropdown'] },
+            urls.map((url) =>
+              el('a', { href: url, className: ['card-icon-item'], target: '_blank', rel: 'noopener noreferrer' }, [
+                { type: 'text', value: repoLabel(url) },
+              ]),
+            ),
+          ),
+        ]
+      : [];
+
+  return el(
+    'div',
+    {
+      className: ['card-icon-btn', `card-${kind}`, ...(label ? ['has-label'] : [])],
+      'data-urls': urls.join(','),
+    },
+    [
+      leaf('img', { src: icon, alt: '', className: ['card-icon-img'] }),
+      ...(label ? [leaf('span', { className: ['card-icon-label'] }, label)] : []),
+      ...dropdown,
+    ],
+  );
+}
+
 /* ──────────────────────── grids, details, steps ──────────────────────── */
 
 /**
@@ -500,7 +598,10 @@ export function remarkGrid() {
       const { variant } = attrs(node);
       const cardClass = ['tech-card', ...(variant ? [`${variant}-card`] : [])];
       const cards = splitByHeading(node.children, 3).map(({ heading, body }) =>
-        el('div', { className: cardClass }, [el('h4', {}, heading.children), ...body]),
+        el('div', { className: cardClass }, [
+          el('h4', {}, heading.children),
+          ...body.map((child: Node) => (isTagRow(child) ? tagRowToList(child) : child)),
+        ]),
       );
       return replace(
         parent,
@@ -687,11 +788,11 @@ export function remarkDownload() {
   };
 }
 
-/** `:::repos` wrapping a list of links → GitHub buttons. */
-export function remarkRepos() {
+/** Shared by `:::repos` and `:::docs`: a list of links → a row of icon buttons. */
+function remarkLinkButtons(directive: string, wrapperClass: string, btnClass: string, icon: string) {
   return (tree: MdastRoot) => {
     visit(tree, 'containerDirective', (node: Node, index, parent) => {
-      if (node.name !== 'repos' || parent == null || index == null) return;
+      if (node.name !== directive || parent == null || index == null) return;
       const list = node.children.find((c: Node) => c.type === 'list');
       if (!list) return;
 
@@ -701,16 +802,26 @@ export function remarkRepos() {
           links.push(link);
         });
         return links.map((link) =>
-          el('a', { href: link.url, className: ['repo-btn'], target: '_blank', rel: 'noopener noreferrer' }, [
-            leaf('img', { src: GITHUB_ICON, alt: '', className: ['repo-btn-icon'] }),
+          el('a', { href: link.url, className: [btnClass], target: '_blank', rel: 'noopener noreferrer' }, [
+            leaf('img', { src: icon, alt: '', className: [`${btnClass}-icon`] }),
             leaf('span', {}, mdastToString(link) || repoLabel(link.url)),
           ]),
         );
       });
 
-      return replace(parent, index, el('div', { className: ['repo-links'] }, buttons));
+      return replace(parent, index, el('div', { className: [wrapperClass] }, buttons));
     });
   };
+}
+
+/** `:::repos` wrapping a list of links → GitHub buttons. */
+export function remarkRepos() {
+  return remarkLinkButtons('repos', 'repo-links', 'repo-btn', GITHUB_ICON);
+}
+
+/** `:::docs` wrapping a list of links → documentation buttons. */
+export function remarkDocs() {
+  return remarkLinkButtons('docs', 'docs-links', 'docs-btn', DOCS_ICON);
 }
 
 /* ───────────────────────── document structure ───────────────────────── */
@@ -961,6 +1072,7 @@ export const remarkPlugins = [
   remarkYoutube,
   remarkDownload,
   remarkRepos,
+  remarkDocs,
   remarkEndpoints,
   remarkFlow,
   remarkSteps,

@@ -60,25 +60,25 @@ function wireProjectCards(root: ParentNode): void {
     card.addEventListener('blur', resetTilt);
 
     const open = (target: EventTarget | null) => {
-      if (target instanceof Element && target.closest('.card-repo')) return;
+      if (target instanceof Element && target.closest('.card-icons')) return;
       const href = card.dataset.href;
       if (href) window.location.href = href;
     };
     card.addEventListener('click', (e) => open(e.target));
     card.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter' && e.key !== ' ') return;
-      if (e.target instanceof Element && e.target.closest('.card-repo')) return;
+      if (e.target instanceof Element && e.target.closest('.card-icons')) return;
       e.preventDefault();
       open(e.target);
     });
   });
 
-  // A single repo opens directly; several show the hover dropdown instead.
-  root.querySelectorAll<HTMLElement>('.card-repo[data-urls]').forEach((repo) => {
-    if (!once(repo)) return;
-    repo.addEventListener('click', (e) => {
+  // A single URL opens directly; several show the hover dropdown instead.
+  root.querySelectorAll<HTMLElement>('.card-icon-btn[data-urls]').forEach((btn) => {
+    if (!once(btn)) return;
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const urls = repo.dataset.urls;
+      const urls = btn.dataset.urls;
       if (urls && !urls.includes(',')) window.open(urls, '_blank', 'noopener');
     });
   });
@@ -90,7 +90,14 @@ function wireSocialLinks(root: ParentNode): void {
     if (!once(pill)) return;
     const open = () => {
       const url = pill.dataset.url;
-      if (url) window.open(url, '_blank', 'noopener');
+      if (!url) return;
+      // mailto: has no page to open — navigate in place so the mail client
+      // (or the OS handler) launches instead of a blank tab.
+      if (url.startsWith('mailto:')) {
+        window.location.href = url;
+        return;
+      }
+      window.open(url, '_blank', 'noopener');
     };
     pill.addEventListener('click', (e) => {
       if (e.target instanceof Element && e.target.closest('.copy-btn')) return;

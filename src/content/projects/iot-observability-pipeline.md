@@ -3,7 +3,7 @@ title: IoT Observability Pipeline
 tagline: Event-driven IoT telemetry with real-time stream enrichment
 ---
 
-:::hero{cover="/media/covers/iot-observability-pipeline.webp"}
+:::hero{cover="/media/covers/iot-observability-pipeline.webp" repo="https://github.com/jecaro094/iot-observability-pipeline" docs="https://jecaro094.github.io/tech-docs/projects/iot-observability-pipeline/"}
 # IoT Observability Pipeline
 
 Event-driven IoT telemetry with real-time stream enrichment
@@ -42,66 +42,10 @@ producing telemetry concurrently.
 5. **✅ Enriched output** — The combined frame-plus-context payload is published to a final stream for downstream consumers.
 :::
 
-:::::details[🔧 Technical Details (For Developers)]
-#### 🔄 Data Flow
-
-::::steps
-1. **Trigger endpoint**
-
-   :::endpoints
-   - `POST /trigger` — Dispatches a Celery `group()` of 500 camera tasks. Returns immediately; the work happens asynchronously.
-   :::
-
-2. **Parallel dispatch**
-
-   Celery fans the work out across workers using `group()`, with **Redis** as the
-   broker. Each task simulates one device and produces to Kafka.
-
-3. **Input topics**
-
-   :::endpoints
-   - `telemetry.device.state` — Ambient-light readings (room → current light color).
-   - `telemetry.device.frames` — Camera frames tagged with their room id.
-   :::
-
-4. **Stream enrichment**
-
-   A stateful consumer (`StreamEnricher`) subscribes to both input topics. It
-   keeps an **in-memory map of `room → latest light color`**, updated on every
-   `device.state` event. For each `device.frames` event it looks up that room's
-   current light and merges it into the payload.
-
-5. **Enriched output**
-
-   :::endpoints
-   - `enriched.telemetry.output` — Frames enriched with per-room lighting context, ready for analytics.
-   :::
-::::
-
-#### 🧭 Design Rationale
-
-:::grid{variant="auth"}
-### 📨 Why Kafka
-
-Replayable log, high throughput, and clean producer–consumer decoupling. Each
-stage can fail and catch up independently.
-
-### 🧵 Why Celery `group()`
-
-Turns one request into 500 parallel units of work without hand-rolling a thread
-pool or a scheduler.
-
-### 🧠 In-memory enrichment
-
-Correlation state lives in the consumer, so there is no database on the hot path
-— lower latency and one less thing to operate.
-
-### 🐳 Docker Compose
-
-FastAPI, Celery, Kafka, and Redis come up together with a single command, so the
-whole pipeline is reproducible locally.
+:::info[Want the full technical breakdown?]
+The data flow, topic layout and design rationale for this pipeline are written up
+in the [technical documentation](https://jecaro094.github.io/tech-docs/projects/iot-observability-pipeline/).
 :::
-:::::
 
 ## 🧱 Architecture {#architecture}
 
@@ -153,4 +97,10 @@ whole pipeline is reproducible locally.
 
 :::repos
 - https://github.com/jecaro094/iot-observability-pipeline
+:::
+
+## Documentation {#docs}
+
+:::docs
+- [IoT Observability Pipeline](https://jecaro094.github.io/tech-docs/projects/iot-observability-pipeline/)
 :::
