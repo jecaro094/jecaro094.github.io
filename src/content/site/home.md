@@ -65,14 +65,30 @@ Analytics APIs, AWS data platform work, GitLab metrics ETL, and a FastAPI dashbo
 `Python` `Django` `FastAPI` `Elasticsearch` `AWS`
 :::
 
-- :link[Full experience →]{href="/cv" icon="/media/icons/cv.webp"}
+:::role{period="2019–2021" logo="/media/logos/quantec.webp" color="#4caf50"}
+### Fullstack Developer
+
+Quantec Data Center SL
+
+Python systems for wind-turbine monitoring and forest-fire early warning.
+
+`Python` `Angular` `Web Socket`
+:::
+
+:::role{period="2018–2019" logo="/media/logos/grvc.webp" color="#5c6bc0"}
+### Software Developer
+
+GRVC, Universidad de Sevilla
+
+Aerial robotics with ORB-SLAM on ROS, plus camera and GPS sensor fusion.
+
+`ROS` `ORB-SLAM` `C++`
+:::
 
 ## Featured Projects {#projects}
 
 :::project{href="/projects/iot-observability-pipeline/" cover="/media/covers/iot-observability-pipeline.webp" repo="https://github.com/jecaro094/iot-observability-pipeline" docs="https://jecaro094.github.io/tech-docs/projects/iot-observability-pipeline/"}
 ### IoT Observability Pipeline
-
-Correlates camera and sensor events from 500 concurrent simulated devices in real time, with no database in the hot path
 
 `FastAPI` `Celery` `Kafka` `Redis` `Docker`
 :::
@@ -80,15 +96,11 @@ Correlates camera and sensor events from 500 concurrent simulated devices in rea
 :::project{href="/projects/qr-voting-survey/" cover="/media/covers/qr-voting-survey.webp" demo="https://www.youtube.com/watch?v=QXVFPCbwpvA"}
 ### QR Voting Survey
 
-Anonymous 1-QR-1-vote system for live events, enforced server-side with JWT and duplicate-use blocking
-
 `Django` `JWT` `PostgreSQL` `Docker`
 :::
 
 :::project{href="/projects/pokeapi/" cover="/media/covers/pokeapi.webp" demo="https://www.youtube.com/watch?v=NaE7lj-nMyk"}
 ### PokeAPI
-
-Full-stack Pokédex with a React UI, a FastAPI backend, and automated CI/CD deployment to AWS
 
 `React` `FastAPI` `AWS` `Docker`
 :::

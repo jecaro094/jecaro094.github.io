@@ -494,8 +494,11 @@ export function remarkProjectCards() {
       const rest = [...node.children];
 
       const heading = takeHeading(rest, 3);
-      const description = takeParagraph(rest);
+      // Tags must be pulled before any paragraph: a card without a description
+      // has the chip row as its first paragraph, which would otherwise be
+      // swallowed as the (now unused) card description.
       const tags = takeTagRow(rest);
+      takeParagraph(rest);
 
       const children: Node[] = [];
       if (cover) {
@@ -504,7 +507,6 @@ export function remarkProjectCards() {
       children.push(leaf('span', { className: ['card-overlay'], 'aria-hidden': 'true' }));
       children.push(leaf('span', { className: ['card-arrow'] }, '→'));
       children.push(el('h3', {}, heading?.children ?? []));
-      if (description) children.push(el('p', { className: ['card-desc'] }, description.children));
       if (tags) children.push(tags);
       children.push(...rest);
 
