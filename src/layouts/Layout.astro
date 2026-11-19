@@ -34,7 +34,8 @@ const ogImage = new URL('/media/foto-perfil.webp', site).href;
     <meta name="description" content={description} />
     <link rel="canonical" href={pageUrl} />
     <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Jesús Caballero Rodríguez — Portfolio" />
     <meta property="og:title" content={title} />
@@ -49,16 +50,7 @@ const ogImage = new URL('/media/foto-perfil.webp', site).href;
   <body>
     <header class="site-header">
       <a class="brand" href="/" aria-label="Home">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" class="brand-icon">
-          <defs>
-            <linearGradient id="header-g" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#4f8cff"/>
-              <stop offset="1" stop-color="#9b6bff"/>
-            </linearGradient>
-          </defs>
-          <rect width="32" height="32" rx="7" fill="url(#header-g)"/>
-          <text x="16" y="22" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">JC</text>
-        </svg>
+        <img src="/favicon.png" alt="" width="32" height="32" class="brand-icon" />
       </a>
       <nav class="section-nav" aria-label="Sections">
         <a href="/#experience" class="nav-tab" data-section="experience">Experience</a>

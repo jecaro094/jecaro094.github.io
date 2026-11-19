@@ -134,6 +134,13 @@ a.card-icon-item:hover {
 
 .site-header .brand-icon {
   display: block;
+  filter: drop-shadow(0 0 6px rgba(79, 140, 255, 0.55)) drop-shadow(0 0 14px rgba(155, 107, 255, 0.35));
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.site-header .brand:hover .brand-icon {
+  filter: drop-shadow(0 0 8px rgba(79, 140, 255, 0.8)) drop-shadow(0 0 18px rgba(155, 107, 255, 0.55));
+  transform: scale(1.05);
 }
 
 .site-header nav {
